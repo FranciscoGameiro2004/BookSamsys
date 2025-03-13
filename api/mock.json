@@ -31,7 +31,7 @@
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "crudKey": "id",
+          "crudKey": "uuid",
           "callbacks": []
         }
       ],
@@ -95,7 +95,7 @@
       "id": "p58m",
       "name": "Books",
       "documentation": "",
-      "value": "[\r\n  {{#repeat 100}}\r\n    {\r\n      \"isbn\": \"{{faker 'commerce.isbn' }}\", //Como tornar único\r\n      \"title\": \"{{faker 'book.title'}}\",\r\n      \"author\": \"{{faker 'book.author'}}\",\r\n      \"publisher\": \"{{faker 'book.publisher'}}\",\r\n      \"genre\": \"{{faker 'book.genre'}}\",\r\n      \"price\": {{faker 'commerce.price'}},\r\n      \"rating\": {{faker 'number.int' min=1 max=5}},\r\n      \"available\": {{faker 'datatype.boolean'}}\r\n    }\r\n  {{/repeat}}\r\n]"
+      "value": "[\r\n  {{#repeat 100}}\r\n    {\r\n      \"uuid\": \"{{faker 'string.uuid' }}\",\r\n      \"isbn\": \"{{faker 'commerce.isbn' }}\",\r\n      \"title\": \"{{faker 'book.title'}}\",\r\n      \"author\": \"{{faker 'book.author'}}\",\r\n      \"publisher\": \"{{faker 'book.publisher'}}\",\r\n      \"genre\": \"{{faker 'book.genre'}}\",\r\n      \"price\": {{faker 'commerce.price'}},\r\n      \"rating\": {{faker 'number.int' min=1 max=5}},\r\n      \"available\": {{faker 'datatype.boolean'}}\r\n    }\r\n  {{/repeat}}\r\n]"
     }
   ],
   "callbacks": []
