@@ -1,0 +1,110 @@
+{
+  "uuid": "712388ea-757b-4848-97f9-6d7a12944f4c",
+  "lastMigration": 33,
+  "name": "Mock",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3001,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "d8ed8d69-d90b-4ab7-bcb1-f224d3e5f80a",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "books",
+      "responses": [
+        {
+          "uuid": "ed24bde0-5cb2-49cb-93da-0e09d55479a3",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "DATABUCKET",
+          "filePath": "",
+          "databucketID": "p58m",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "",
+              "value": "",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "d8ed8d69-d90b-4ab7-bcb1-f224d3e5f80a"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    },
+    {
+      "key": "Access-Control-Allow-Origin",
+      "value": "*"
+    },
+    {
+      "key": "Access-Control-Allow-Methods",
+      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+    },
+    {
+      "key": "Access-Control-Allow-Headers",
+      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": [
+    {
+      "uuid": "406f75c1-93c2-440b-9c4e-226a53fa4918",
+      "id": "p58m",
+      "name": "Books",
+      "documentation": "",
+      "value": "[\r\n  {{#repeat 300}}\r\n    {\r\n      \"isbn\": {{faker 'string.uuid' }}, //Nota: Ver como isto pode ficar no formato de ISBN\r\n      \"title\": {{faker 'book.title'}},\r\n      \"author\": {{faker 'book.author'}},\r\n      \"publisher\": {{faker 'book.publisher'}},\r\n      \"genre\": {{faker 'book.genre'}},\r\n      \"price\": {{faker 'commerce.price'}},\r\n      \"rating\": {{faker 'number.int' min=1 max=5}},\r\n      \"available\": {{faker 'datatype.boolean'}}\r\n    }\r\n  {{/repeat}}\r\n]"
+    }
+  ],
+  "callbacks": []
+}
