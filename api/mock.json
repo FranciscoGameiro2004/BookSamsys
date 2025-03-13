@@ -9,15 +9,15 @@
   "folders": [],
   "routes": [
     {
-      "uuid": "d8ed8d69-d90b-4ab7-bcb1-f224d3e5f80a",
-      "type": "http",
+      "uuid": "e3f0285b-67d6-4a67-b498-e1c96569e085",
+      "type": "crud",
       "documentation": "",
-      "method": "get",
+      "method": "",
       "endpoint": "books",
       "responses": [
         {
-          "uuid": "ed24bde0-5cb2-49cb-93da-0e09d55479a3",
-          "body": "",
+          "uuid": "ceb2a7f8-69a6-41b0-a9a1-bfbc3ee7cc3b",
+          "body": "{}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -26,15 +26,7 @@
           "filePath": "",
           "databucketID": "p58m",
           "sendFileAsBody": false,
-          "rules": [
-            {
-              "target": "body",
-              "modifier": "",
-              "value": "",
-              "invert": false,
-              "operator": "equals"
-            }
-          ],
+          "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
@@ -51,7 +43,7 @@
   "rootChildren": [
     {
       "type": "route",
-      "uuid": "d8ed8d69-d90b-4ab7-bcb1-f224d3e5f80a"
+      "uuid": "e3f0285b-67d6-4a67-b498-e1c96569e085"
     }
   ],
   "proxyMode": false,
@@ -103,7 +95,7 @@
       "id": "p58m",
       "name": "Books",
       "documentation": "",
-      "value": "[\r\n  {{#repeat 300}}\r\n    {\r\n      \"isbn\": {{faker 'string.uuid' }}, //Nota: Ver como isto pode ficar no formato de ISBN\r\n      \"title\": {{faker 'book.title'}},\r\n      \"author\": {{faker 'book.author'}},\r\n      \"publisher\": {{faker 'book.publisher'}},\r\n      \"genre\": {{faker 'book.genre'}},\r\n      \"price\": {{faker 'commerce.price'}},\r\n      \"rating\": {{faker 'number.int' min=1 max=5}},\r\n      \"available\": {{faker 'datatype.boolean'}}\r\n    }\r\n  {{/repeat}}\r\n]"
+      "value": "[\r\n  {{#repeat 100}}\r\n    {\r\n      \"isbn\": \"{{faker 'string.uuid' }}\",\r\n      \"title\": \"{{faker 'book.title'}}\",\r\n      \"author\": \"{{faker 'book.author'}}\",\r\n      \"publisher\": \"{{faker 'book.publisher'}}\",\r\n      \"genre\": \"{{faker 'book.genre'}}\",\r\n      \"price\": {{faker 'commerce.price'}},\r\n      \"rating\": {{faker 'number.int' min=1 max=5}},\r\n      \"available\": {{faker 'datatype.boolean'}}\r\n    }\r\n  {{/repeat}}\r\n]"
     }
   ],
   "callbacks": []
