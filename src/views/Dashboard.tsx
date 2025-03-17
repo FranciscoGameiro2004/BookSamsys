@@ -16,6 +16,8 @@ function Dashboard() {
   const [sortBy, setSortBy] = useState('')
   const [orderAndSort, setOrderAndSort] = useState('')
 
+  const [genreFilter, setGenreFilter] = useState('')
+
   useEffect(() => {
     fetchBooks()
   }, [page, quantityPerPage]);
@@ -32,7 +34,7 @@ function Dashboard() {
 
   const fetchBooks = async ():Promise<void> => {
     setLoading(true);
-    fetch(apiURL + "books" + `?page=${page}` + `&limit=${quantityPerPage}` + `&search=${search}` + orderAndSort)
+    fetch(apiURL + "books" + `?page=${page}` + `&limit=${quantityPerPage}` + `&search=${search}` + orderAndSort + genreFilter)
       .then((res) => res.json())
       .then((json) => {
         setBooksList(json);
@@ -66,6 +68,10 @@ function Dashboard() {
     setOrderBy(input)
   }
 
+  const handleGenreFilterChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    setGenreFilter(e.target.value)
+  }
+
   return (
     <>
       <h1>Livros</h1>
@@ -89,6 +95,41 @@ function Dashboard() {
               <label htmlFor="ascRadioBtn">Crescente</label>
               <input type="radio" name="orderBy" id="descRadioBtn" value="desc" onClick={() => handleOrderChange('desc')} />
               <label htmlFor="descRadioBtn">Derescente</label>
+            </div>
+          </div>
+          <div>
+            <label htmlFor="">Filtros</label>
+            {
+              /*Filtrar por
+                [] Gênero (opt)
+                [] Preço (min + max)
+                [] Avaliação (min)
+                [] Disponibilidade (t/f)
+              */
+            }
+            <div>
+            <label htmlFor="sortBy">Gênero:</label>
+            <select name="genreFilter" id="genreFilter" value={genreFilter} onChange={handleGenreFilterChange}>
+              <option value="">Selecione</option>
+              <option value="&genre_eq=Fantasy">Fantasy</option>
+              <option value="&genre_eq=Science Fiction">Science Fiction</option>
+              <option value="&genre_eq=Comic">Comic</option>
+              <option value="&genre_eq=Poetry">Poetry</option>
+              <option value="&genre_eq=Children's Literature">Children's Literature</option>
+              <option value="&genre_eq=Adventure">Adventure</option>
+              <option value="&genre_eq=Psychology">Psychology</option>
+              <option value="&genre_eq=Business">Business</option>
+              <option value="&genre_eq=Classic">Classic</option>
+              <option value="&genre_eq=Romance">Romance</option>
+              <option value="&genre_eq=Comedy">Comedy</option>
+              <option value="&genre_eq=Thriller">Thriller</option>
+              <option value="&genre_eq=Historical Fiction">Historical Fiction</option>
+              <option value="&genre_eq=Western">Western</option>
+              <option value="&genre_eq=Religion">Religion</option>
+              <option value="&genre_eq=Mythology">Mythology</option>
+              <option value="&genre_eq=Philosophy">Philosophy</option>
+              <option value="&genre_eq=Biography">Biography</option>
+            </select>
             </div>
           </div>
           <br />
