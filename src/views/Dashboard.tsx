@@ -77,7 +77,7 @@ function Dashboard() {
             <select name="sortBy" id="sortBy" value={sortBy} onChange={handleSortChange}>
               <option value="">Selecione</option>
               <option value="title">Nome</option>
-              <option value="autor">Autor</option>
+              <option value="author">Autor</option>
               <option value="price">Preço</option>
               <option value="rating">Avaliação</option>
             </select>
