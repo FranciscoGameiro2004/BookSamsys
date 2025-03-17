@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEventHandler, FormEventHandler } from "react";
 import "../css/Dashboard.css";
 
 import { type Book } from "../types/books";
@@ -11,16 +11,30 @@ function Dashboard() {
   const [page, setPage] = useState(1)
   const [quantityPerPage, setQuantityPerPage] = useState(15)
 
+  const [search, setSearch] = useState('')
+
   useEffect(() => {
+    /* setLoading(true);
+    fetch(apiURL + "books" + `?page=${page}` + `&limit=${quantityPerPage}` + `&search=${search}`)
+      .then((res) => res.json())
+      .then((json) => {
+        setBooksList(json);
+        console.log(json);
+      });
+    setLoading(false); */
+    fetchBooks()
+  }, [page, quantityPerPage]);
+
+  const fetchBooks = async ():Promise<void> => {
     setLoading(true);
-    fetch(apiURL + "books" + `?page=${page}` + `&limit=${quantityPerPage}`)
+    fetch(apiURL + "books" + `?page=${page}` + `&limit=${quantityPerPage}` + `&search=${search}`)
       .then((res) => res.json())
       .then((json) => {
         setBooksList(json);
         console.log(json);
       });
     setLoading(false);
-  }, [page, quantityPerPage]);
+  } 
 
   const handleClickPage = (input: 'next' | 'previous'): void => {
     if (input === 'next') {
@@ -30,9 +44,26 @@ function Dashboard() {
     }
   }
 
+  const handleSearchChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setSearch(e.target.value)
+  }
+
+  const handleFormSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault()
+    await fetchBooks()
+  }
+
   return (
     <>
       <h1>Livros</h1>
+      <div>
+        <form action="#" onSubmit={handleFormSubmit}>
+          <input type="text" value={search} placeholder="Pesquisar" name="search" id="search" onChange={handleSearchChange}/>
+          <br />
+          <input type="submit" value="Procurar" />
+        </form>
+      </div>
+      <hr />
       <table border={1}>
         <thead>
           <tr>
