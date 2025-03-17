@@ -21,6 +21,7 @@ function Dashboard() {
   const [minPrice, setMinPrice] = useState(0)
   const [maxPrice, setMaxPrice] = useState(1000)
   const [priceRange, setPriceRange] = useState(`&price_gte=${minPrice}&price_lte=${maxPrice}`)
+  const [minRating, setMinRating] = useState(1)
 
   useEffect(() => {
     fetchBooks()
@@ -42,7 +43,7 @@ function Dashboard() {
 
   const fetchBooks = async ():Promise<void> => {
     setLoading(true);
-    fetch(apiURL + "books" + `?page=${page}` + `&limit=${quantityPerPage}` + `&search=${search}` + orderAndSort + genreFilter + priceRange)
+    fetch(apiURL + "books" + `?page=${page}` + `&limit=${quantityPerPage}` + `&search=${search}` + orderAndSort + genreFilter + priceRange + `&rating_gte=${minRating}`)
       .then((res) => res.json())
       .then((json) => {
         setBooksList(json);
@@ -65,6 +66,7 @@ function Dashboard() {
 
   const handleFormSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
+    setPage(1)
     await fetchBooks()
   }
 
@@ -85,6 +87,10 @@ function Dashboard() {
   }
   const handleMaxPriceChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setMaxPrice(+e.target.value)
+  }
+
+  const handleMinRatingChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setMinRating(+e.target.value)
   }
 
   return (
@@ -117,7 +123,7 @@ function Dashboard() {
             {
               /*Filtrar por
                 [X] Gênero (opt)
-                [] Preço (min + max)
+                [X] Preço (min + max)
                 [] Avaliação (min)
                 [] Disponibilidade (t/f)
               */
@@ -147,10 +153,14 @@ function Dashboard() {
             </select>
             </div>
             <div>
-              
               <input type="range" name="minPrice" min={0} max={maxPrice} value={minPrice} id="minPrice" onChange={handleMinPriceChange} />
               <input type="range" name="maxPrice" min={minPrice} max={3000} value={maxPrice} id="maxPrice" onChange={handleMaxPriceChange}/>
               <p>Min: {minPrice}€ | Max: {maxPrice}€</p>
+            </div>
+            <div>
+              <label >Nota Mínima: {minRating}★</label>
+              <br />
+              <input type="range" name="maxPrice" min={1} max={5} value={minRating} id="minRating" onChange={handleMinRatingChange}/>
             </div>
           </div>
           <br />
