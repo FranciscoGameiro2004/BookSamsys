@@ -18,6 +18,10 @@ function Dashboard() {
 
   const [genreFilter, setGenreFilter] = useState('')
 
+  const [minPrice, setMinPrice] = useState(0)
+  const [maxPrice, setMaxPrice] = useState(1000)
+  const [priceRange, setPriceRange] = useState(`&price_gte=${minPrice}&price_lte=${maxPrice}`)
+
   useEffect(() => {
     fetchBooks()
   }, [page, quantityPerPage]);
@@ -32,9 +36,13 @@ function Dashboard() {
     }
   }, [orderBy, sortBy])
 
+  useEffect(() => {
+    setPriceRange(`&price_gte=${minPrice}&price_lte=${maxPrice}`)
+  }, [minPrice, maxPrice])
+
   const fetchBooks = async ():Promise<void> => {
     setLoading(true);
-    fetch(apiURL + "books" + `?page=${page}` + `&limit=${quantityPerPage}` + `&search=${search}` + orderAndSort + genreFilter)
+    fetch(apiURL + "books" + `?page=${page}` + `&limit=${quantityPerPage}` + `&search=${search}` + orderAndSort + genreFilter + priceRange)
       .then((res) => res.json())
       .then((json) => {
         setBooksList(json);
@@ -72,6 +80,13 @@ function Dashboard() {
     setGenreFilter(e.target.value)
   }
 
+  const handleMinPriceChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setMinPrice(+e.target.value)
+  }
+  const handleMaxPriceChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setMaxPrice(+e.target.value)
+  }
+
   return (
     <>
       <h1>Livros</h1>
@@ -101,7 +116,7 @@ function Dashboard() {
             <label htmlFor="">Filtros</label>
             {
               /*Filtrar por
-                [] Gênero (opt)
+                [X] Gênero (opt)
                 [] Preço (min + max)
                 [] Avaliação (min)
                 [] Disponibilidade (t/f)
@@ -130,6 +145,12 @@ function Dashboard() {
               <option value="&genre_eq=Philosophy">Philosophy</option>
               <option value="&genre_eq=Biography">Biography</option>
             </select>
+            </div>
+            <div>
+              
+              <input type="range" name="minPrice" min={0} max={maxPrice} value={minPrice} id="minPrice" onChange={handleMinPriceChange} />
+              <input type="range" name="maxPrice" min={minPrice} max={3000} value={maxPrice} id="maxPrice" onChange={handleMaxPriceChange}/>
+              <p>Min: {minPrice}€ | Max: {maxPrice}€</p>
             </div>
           </div>
           <br />
