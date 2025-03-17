@@ -16,6 +16,14 @@ function Dashboard() {
   const [sortBy, setSortBy] = useState('')
   const [orderAndSort, setOrderAndSort] = useState('')
 
+  const [genreFilter, setGenreFilter] = useState('')
+
+  const [minPrice, setMinPrice] = useState(0)
+  const [maxPrice, setMaxPrice] = useState(1000)
+  const [priceRange, setPriceRange] = useState(`&price_gte=${minPrice}&price_lte=${maxPrice}`)
+  const [minRating, setMinRating] = useState(1)
+  const [onlyAvailable, setOnlyAvailable] = useState(false)
+
   useEffect(() => {
     fetchBooks()
   }, [page, quantityPerPage]);
@@ -30,9 +38,13 @@ function Dashboard() {
     }
   }, [orderBy, sortBy])
 
+  useEffect(() => {
+    setPriceRange(`&price_gte=${minPrice}&price_lte=${maxPrice}`)
+  }, [minPrice, maxPrice])
+
   const fetchBooks = async ():Promise<void> => {
     setLoading(true);
-    fetch(apiURL + "books" + `?page=${page}` + `&limit=${quantityPerPage}` + `&search=${search}` + orderAndSort)
+    fetch(apiURL + "books" + `?page=${page}` + `&limit=${quantityPerPage}` + `&search=${search}` + orderAndSort + genreFilter + priceRange + `&rating_gte=${minRating}` + (onlyAvailable ? `&available_eq=${onlyAvailable}`: ''))
       .then((res) => res.json())
       .then((json) => {
         setBooksList(json);
@@ -55,6 +67,7 @@ function Dashboard() {
 
   const handleFormSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
+    setPage(1)
     await fetchBooks()
   }
 
@@ -64,6 +77,25 @@ function Dashboard() {
 
   const handleOrderChange = (input: 'asc' | 'desc') => {
     setOrderBy(input)
+  }
+
+  const handleGenreFilterChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    setGenreFilter(e.target.value)
+  }
+
+  const handleMinPriceChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setMinPrice(+e.target.value)
+  }
+  const handleMaxPriceChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setMaxPrice(+e.target.value)
+  }
+
+  const handleMinRatingChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setMinRating(+e.target.value)
+  }
+
+  const handleOnlyAvailableChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setOnlyAvailable(previousValue => !previousValue)
   }
 
   return (
@@ -90,6 +122,55 @@ function Dashboard() {
               <input type="radio" name="orderBy" id="descRadioBtn" value="desc" onClick={() => handleOrderChange('desc')} />
               <label htmlFor="descRadioBtn">Derescente</label>
             </div>
+          </div>
+          <div>
+            <label htmlFor="">Filtros</label>
+            {
+              /*Filtrar por
+                [X] Gênero (opt)
+                [X] Preço (min + max)
+                [X] Avaliação (min)
+                [] Disponibilidade (t/f)
+              */
+            }
+            <div>
+            <label htmlFor="sortBy">Gênero:</label>
+            <select name="genreFilter" id="genreFilter" value={genreFilter} onChange={handleGenreFilterChange}>
+              <option value="">Selecione</option>
+              <option value="&genre_eq=Fantasy">Fantasy</option>
+              <option value="&genre_eq=Science Fiction">Science Fiction</option>
+              <option value="&genre_eq=Comic">Comic</option>
+              <option value="&genre_eq=Poetry">Poetry</option>
+              <option value="&genre_eq=Children's Literature">Children's Literature</option>
+              <option value="&genre_eq=Adventure">Adventure</option>
+              <option value="&genre_eq=Psychology">Psychology</option>
+              <option value="&genre_eq=Business">Business</option>
+              <option value="&genre_eq=Classic">Classic</option>
+              <option value="&genre_eq=Romance">Romance</option>
+              <option value="&genre_eq=Comedy">Comedy</option>
+              <option value="&genre_eq=Thriller">Thriller</option>
+              <option value="&genre_eq=Historical Fiction">Historical Fiction</option>
+              <option value="&genre_eq=Western">Western</option>
+              <option value="&genre_eq=Religion">Religion</option>
+              <option value="&genre_eq=Mythology">Mythology</option>
+              <option value="&genre_eq=Philosophy">Philosophy</option>
+              <option value="&genre_eq=Biography">Biography</option>
+            </select>
+            </div>
+            <div>
+              <input type="range" name="minPrice" min={0} max={maxPrice} value={minPrice} id="minPrice" onChange={handleMinPriceChange} />
+              <input type="range" name="maxPrice" min={minPrice} max={3000} value={maxPrice} id="maxPrice" onChange={handleMaxPriceChange}/>
+              <p>Min: {minPrice}€ | Max: {maxPrice}€</p>
+            </div>
+            <div>
+              <label >Nota Mínima: {minRating}★</label>
+              <br />
+              <input type="range" name="maxPrice" min={1} max={5} value={minRating} id="minRating" onChange={handleMinRatingChange}/>
+            </div>
+          </div>
+          <div>
+            <label htmlFor="onlyAvailable">Somente os disponíveis? </label>
+            <input type="checkbox" name="onlyAvailable" id="onlyAvailable" onChange={handleOnlyAvailableChange} />
           </div>
           <br />
           <input type="submit" value="Procurar" />
