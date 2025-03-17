@@ -22,6 +22,7 @@ function Dashboard() {
   const [maxPrice, setMaxPrice] = useState(1000)
   const [priceRange, setPriceRange] = useState(`&price_gte=${minPrice}&price_lte=${maxPrice}`)
   const [minRating, setMinRating] = useState(1)
+  const [onlyAvailable, setOnlyAvailable] = useState(false)
 
   useEffect(() => {
     fetchBooks()
@@ -43,7 +44,7 @@ function Dashboard() {
 
   const fetchBooks = async ():Promise<void> => {
     setLoading(true);
-    fetch(apiURL + "books" + `?page=${page}` + `&limit=${quantityPerPage}` + `&search=${search}` + orderAndSort + genreFilter + priceRange + `&rating_gte=${minRating}`)
+    fetch(apiURL + "books" + `?page=${page}` + `&limit=${quantityPerPage}` + `&search=${search}` + orderAndSort + genreFilter + priceRange + `&rating_gte=${minRating}` + (onlyAvailable ? `&available_eq=${onlyAvailable}`: ''))
       .then((res) => res.json())
       .then((json) => {
         setBooksList(json);
@@ -93,6 +94,10 @@ function Dashboard() {
     setMinRating(+e.target.value)
   }
 
+  const handleOnlyAvailableChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setOnlyAvailable(previousValue => !previousValue)
+  }
+
   return (
     <>
       <h1>Livros</h1>
@@ -124,7 +129,7 @@ function Dashboard() {
               /*Filtrar por
                 [X] Gênero (opt)
                 [X] Preço (min + max)
-                [] Avaliação (min)
+                [X] Avaliação (min)
                 [] Disponibilidade (t/f)
               */
             }
@@ -162,6 +167,10 @@ function Dashboard() {
               <br />
               <input type="range" name="maxPrice" min={1} max={5} value={minRating} id="minRating" onChange={handleMinRatingChange}/>
             </div>
+          </div>
+          <div>
+            <label htmlFor="onlyAvailable">Somente os disponíveis? </label>
+            <input type="checkbox" name="onlyAvailable" id="onlyAvailable" onChange={handleOnlyAvailableChange} />
           </div>
           <br />
           <input type="submit" value="Procurar" />
