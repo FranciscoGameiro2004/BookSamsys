@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEventHandler, FormEventHandler, MouseEventHandler } from "react";
 import "../css/Dashboard.css";
 
 import { type Book } from "../types/books";
@@ -11,16 +11,35 @@ function Dashboard() {
   const [page, setPage] = useState(1)
   const [quantityPerPage, setQuantityPerPage] = useState(15)
 
+  const [search, setSearch] = useState('')
+  const [orderBy, setOrderBy] = useState('')
+  const [sortBy, setSortBy] = useState('')
+  const [orderAndSort, setOrderAndSort] = useState('')
+
   useEffect(() => {
+    fetchBooks()
+  }, [page, quantityPerPage]);
+
+  useEffect(() => {
+    if (orderBy !== '' && sortBy !== '') {
+      setOrderAndSort(`&sort=${sortBy}&order=${orderBy}`)
+    } else if (sortBy !== '') {
+      setOrderAndSort(`&sort=${sortBy}`)
+    } else {
+      setOrderAndSort('')
+    }
+  }, [orderBy, sortBy])
+
+  const fetchBooks = async ():Promise<void> => {
     setLoading(true);
-    fetch(apiURL + "books" + `?page=${page}` + `&limit=${quantityPerPage}`)
+    fetch(apiURL + "books" + `?page=${page}` + `&limit=${quantityPerPage}` + `&search=${search}` + orderAndSort)
       .then((res) => res.json())
       .then((json) => {
         setBooksList(json);
         console.log(json);
       });
     setLoading(false);
-  }, [page, quantityPerPage]);
+  } 
 
   const handleClickPage = (input: 'next' | 'previous'): void => {
     if (input === 'next') {
@@ -30,9 +49,53 @@ function Dashboard() {
     }
   }
 
+  const handleSearchChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setSearch(e.target.value)
+  }
+
+  const handleFormSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault()
+    await fetchBooks()
+  }
+
+  const handleSortChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    setSortBy(e.target.value)
+  }
+
+  const handleOrderChange = (input: 'asc' | 'desc') => {
+    setOrderBy(input)
+  }
+
   return (
     <>
       <h1>Livros</h1>
+      <div>
+        <form action="#" onSubmit={handleFormSubmit}>
+          <input type="text" value={search} placeholder="Pesquisar" name="search" id="search" onChange={handleSearchChange}/>
+          <div>
+            <label htmlFor="sortBy">Ordenar por:</label>
+            <select name="sortBy" id="sortBy" value={sortBy} onChange={handleSortChange}>
+              <option value="">Selecione</option>
+              <option value="title">Nome</option>
+              <option value="author">Autor</option>
+              <option value="price">Preço</option>
+              <option value="rating">Avaliação</option>
+            </select>
+          </div>
+          <div>
+            <label>Por ordem:</label>
+            <div>
+              <input type="radio" name="orderBy" id="ascRadioBtn" value="asc" onClick={() => handleOrderChange('asc')} />
+              <label htmlFor="ascRadioBtn">Crescente</label>
+              <input type="radio" name="orderBy" id="descRadioBtn" value="desc" onClick={() => handleOrderChange('desc')} />
+              <label htmlFor="descRadioBtn">Derescente</label>
+            </div>
+          </div>
+          <br />
+          <input type="submit" value="Procurar" />
+        </form>
+      </div>
+      <hr />
       <table border={1}>
         <thead>
           <tr>
