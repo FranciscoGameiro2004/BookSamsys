@@ -67,8 +67,7 @@ function Dashboard() {
         {page > 1 && <button type="button" onClick={() => handleClickPage('previous')}>{'<'}</button>}
         <label>Page {page}</label>
         {//! Não consigo buscar limite da paginação pela API
-        page < Math.round(100/quantityPerPage) && <button type="button"  onClick={() => handleClickPage('next')}>{'>'}</button>}
-        
+        page < Math.floor(100/quantityPerPage) + (100%quantityPerPage > 0 ? 1 : 0) && <button type="button"  onClick={() => handleClickPage('next')}>{'>'}</button>}
       </div>
     </>
   );
