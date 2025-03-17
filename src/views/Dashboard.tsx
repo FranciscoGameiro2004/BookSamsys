@@ -1,4 +1,4 @@
-import { useState, useEffect, type ReactNode } from "react";
+import { useState, useEffect } from "react";
 import "../css/Dashboard.css";
 
 import { type Book } from "../types/books";
@@ -8,21 +8,31 @@ function Dashboard() {
 
   const [booksList, setBooksList] = useState<Book[]>([]);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1)
+  const [quantityPerPage, setQuantityPerPage] = useState(15)
 
   useEffect(() => {
     setLoading(true);
-    fetch(apiURL + "books")
+    fetch(apiURL + "books" + `?page=${page}` + `&limit=${quantityPerPage}`)
       .then((res) => res.json())
       .then((json) => {
         setBooksList(json);
         console.log(json);
-        
       });
     setLoading(false);
-  }, []);
+  }, [page, quantityPerPage]);
+
+  const handleClickPage = (input: 'next' | 'previous'): void => {
+    if (input === 'next') {
+      setPage(previousPage => previousPage + 1)
+    } else if (input === 'previous') {
+      setPage(previousPage => previousPage - 1)
+    }
+  }
 
   return (
     <>
+      <h1>Livros</h1>
       <table border={1}>
         <thead>
           <tr>
@@ -53,6 +63,13 @@ function Dashboard() {
           )}
         </tbody>
       </table>
+      <div>
+        {page > 1 && <button type="button" onClick={() => handleClickPage('previous')}>{'<'}</button>}
+        <label>Page {page}</label>
+        {//! Não consigo buscar limite da paginação pela API
+        page < Math.round(100/quantityPerPage) && <button type="button"  onClick={() => handleClickPage('next')}>{'>'}</button>}
+        
+      </div>
     </>
   );
 }
