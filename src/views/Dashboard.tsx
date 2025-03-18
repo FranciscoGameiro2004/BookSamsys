@@ -8,7 +8,7 @@ import {
 import "../css/Dashboard.css";
 
 import { type Book } from "../types/books";
-import { Button, Icon } from "actify";
+import { Button, Icon, TextField } from "actify";
 import { Table, TableHeader, Column, TableBody, Row, Cell } from "actify";
 
 function Dashboard() {
@@ -82,8 +82,8 @@ function Dashboard() {
     }
   };
 
-  const handleSearchChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setSearch(e.target.value);
+  const handleSearchChange = (newValue: string) => {
+    setSearch(newValue);
   };
 
   const handleFormSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
@@ -128,13 +128,14 @@ function Dashboard() {
       <h1>Livros</h1>
       <div>
         <form action="#" onSubmit={handleFormSubmit}>
-          <input
+          <TextField
             type="text"
             value={search}
             placeholder="Pesquisar"
             name="search"
             id="search"
             onChange={handleSearchChange}
+            leadingIcon={<Icon>Search</Icon>}
           />
           <div>
             <label htmlFor="sortBy">Ordenar por:</label>
