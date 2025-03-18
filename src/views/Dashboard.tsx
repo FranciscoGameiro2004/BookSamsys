@@ -8,7 +8,8 @@ import {
 import "../css/Dashboard.css";
 
 import { type Book } from "../types/books";
-import { Button, IconButton, Icon } from "actify";
+import { Button, Icon } from "actify";
+import { Table, TableHeader, Column, TableBody, Row, Cell } from "actify";
 
 function Dashboard() {
   const apiURL = import.meta.env.VITE_API_BASE_URL;
@@ -265,38 +266,39 @@ function Dashboard() {
         </form>
       </div>
       <hr />
-      <table border={1}>
-        <thead>
-          <tr>
-            <th>ISBN</th>
-            <th>Título</th>
-            <th>Autor</th>
-            <th>Editora</th>
-            <th>Gênero</th>
-            <th>Preço (€)</th>
-            <th>Avaliação</th>
-            <th>Disponibilidade</th>
-          </tr>
-        </thead>
-        <tbody>
-          {booksList.map((book) => (
-            <tr key={book.uuid}>
-              <td>{book.isbn}</td>
-              <td>{book.title}</td>
-              <td>{book.author}</td>
-              <td>{book.publisher}</td>
-              <td>{book.genre}</td>
-              <td>{book.price}€</td>
-              <td>{book.rating}/5</td>
-              <td>{book.available ? "Em Stock" : "Fora de Stock"}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Table
+        aria-label="Lista de Livros"
+        style={{ height: "210px", maxWidth: "400px" }}
+      >
+        <TableHeader>
+          <Column key="isbn">ISBN</Column>
+          <Column key="title">Título</Column>
+          <Column key="author">Autor</Column>
+          <Column key="publisher">Editora</Column>
+          <Column key="genre">Gênero</Column>
+          <Column key="price">Preço (€)</Column>
+          <Column key="rating">Avaliação</Column>
+          <Column key="available">Disponibilidade</Column>
+        </TableHeader>
+        <TableBody items={booksList}>
+          {(book: Book) => (
+            <Row key={book.uuid}>
+              <Cell>{book.isbn}</Cell>
+              <Cell>{book.title}</Cell>
+              <Cell>{book.author}</Cell>
+              <Cell>{book.publisher}</Cell>
+              <Cell>{book.genre}</Cell>
+              <Cell>{book.price}€</Cell>
+              <Cell>{book.rating}/5</Cell>
+              <Cell>{book.available ? "Em Stock" : "Fora de Stock"}</Cell>
+            </Row>
+          )}
+        </TableBody>
+      </Table>
       <div>
         {page > 1 && (
           <Button onPress={() => handleClickPage("previous")}>
-              <Icon>Arrow_Back_iOS</Icon>
+            <Icon>Arrow_Back_iOS</Icon>
           </Button>
         )}
         <label>Page {page}</label>
