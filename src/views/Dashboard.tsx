@@ -94,18 +94,16 @@ function Dashboard() {
     await fetchBooks();
   };
 
-  const handleSortChange = (newValue) => {
+  const handleSortChange = (newValue: (string)) => {
     setSortBy(newValue);
   };
 
-  const handleOrderChange = (input) => {
+  const handleOrderChange = (input: string) => {
     setOrderBy(input);
   };
 
-  const handleGenreFilterChange: ChangeEventHandler<HTMLSelectElement> = (
-    e
-  ) => {
-    setGenreFilter(e.target.value);
+  const handleGenreFilterChange = (newValue: string) => {
+    setGenreFilter(newValue)
   };
 
   const handleMinPriceChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -161,53 +159,47 @@ function Dashboard() {
           </div>
           <div>
             <label htmlFor="">Filtros</label>
-            {/*Filtrar por
-                [X] Gênero (opt)
-                [X] Preço (min + max)
-                [X] Avaliação (min)
-                [] Disponibilidade (t/f)
-              */}
             <div>
               <label htmlFor="sortBy">Gênero:</label>
               <Select
                 name="genreFilter"
                 id="genreFilter"
-                value={genreFilter}
+                selectedKey={genreFilter}
                 onChange={handleGenreFilterChange}
               >
-                <SelectOption value="">Selecione</SelectOption>
-                <SelectOption value="&genre_eq=Fantasy">Fantasy</SelectOption>
-                <SelectOption value="&genre_eq=Science Fiction">
+                <SelectOption key="">Selecione</SelectOption>
+                <SelectOption key="&genre_eq=Fantasy">Fantasy</SelectOption>
+                <SelectOption key="&genre_eq=Science Fiction">
                   Science Fiction
                 </SelectOption>
-                <SelectOption value="&genre_eq=Comic">Comic</SelectOption>
-                <SelectOption value="&genre_eq=Poetry">Poetry</SelectOption>
-                <SelectOption value="&genre_eq=Children's Literature">
+                <SelectOption key="&genre_eq=Comic">Comic</SelectOption>
+                <SelectOption key="&genre_eq=Poetry">Poetry</SelectOption>
+                <SelectOption key="&genre_eq=Children's Literature">
                   Children's Literature
                 </SelectOption>
-                <SelectOption value="&genre_eq=Adventure">
+                <SelectOption key="&genre_eq=Adventure">
                   Adventure
                 </SelectOption>
-                <SelectOption value="&genre_eq=Psychology">
+                <SelectOption key="&genre_eq=Psychology">
                   Psychology
                 </SelectOption>
-                <SelectOption value="&genre_eq=Business">Business</SelectOption>
-                <SelectOption value="&genre_eq=Classic">Classic</SelectOption>
-                <SelectOption value="&genre_eq=Romance">Romance</SelectOption>
-                <SelectOption value="&genre_eq=Comedy">Comedy</SelectOption>
-                <SelectOption value="&genre_eq=Thriller">Thriller</SelectOption>
-                <SelectOption value="&genre_eq=Historical Fiction">
+                <SelectOption key="&genre_eq=Business">Business</SelectOption>
+                <SelectOption key="&genre_eq=Classic">Classic</SelectOption>
+                <SelectOption key="&genre_eq=Romance">Romance</SelectOption>
+                <SelectOption key="&genre_eq=Comedy">Comedy</SelectOption>
+                <SelectOption key="&genre_eq=Thriller">Thriller</SelectOption>
+                <SelectOption key="&genre_eq=Historical Fiction">
                   Historical Fiction
                 </SelectOption>
-                <SelectOption value="&genre_eq=Western">Western</SelectOption>
-                <SelectOption value="&genre_eq=Religion">Religion</SelectOption>
-                <SelectOption value="&genre_eq=Mythology">
+                <SelectOption key="&genre_eq=Western">Western</SelectOption>
+                <SelectOption key="&genre_eq=Religion">Religion</SelectOption>
+                <SelectOption key="&genre_eq=Mythology">
                   Mythology
                 </SelectOption>
-                <SelectOption value="&genre_eq=Philosophy">
+                <SelectOption key="&genre_eq=Philosophy">
                   Philosophy
                 </SelectOption>
-                <SelectOption value="&genre_eq=Biography">
+                <SelectOption key="&genre_eq=Biography">
                   Biography
                 </SelectOption>
               </Select>
