@@ -1,16 +1,14 @@
 import {
   useState,
   useEffect,
-  ChangeEventHandler,
   FormEventHandler,
-  MouseEventHandler,
 } from "react";
 import "../css/Dashboard.css";
 
 import { type Book } from "../types/books";
 import { Button, Icon, TextField } from "actify";
 import { Table, TableHeader, Column, TableBody, Row, Cell } from "actify";
-import { Select, SelectOption } from "actify";
+import { Select, SelectOption, Checkbox } from "actify";
 import { RadioGroup, Radio } from "actify";
 import { Slider } from "actify";
 
@@ -120,9 +118,7 @@ function Dashboard() {
     }
   };
 
-  const handleOnlyAvailableChange: ChangeEventHandler<
-    HTMLInputElement
-  > = () => {
+  const handleOnlyAvailableChange = () => {
     setOnlyAvailable((previousValue) => !previousValue);
   };
 
@@ -224,8 +220,7 @@ function Dashboard() {
           </div>
           <div>
             <label htmlFor="onlyAvailable">Somente os disponíveis? </label>
-            <input
-              type="checkbox"
+            <Checkbox
               name="onlyAvailable"
               id="onlyAvailable"
               onChange={handleOnlyAvailableChange}

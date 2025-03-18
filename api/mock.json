@@ -18,7 +18,7 @@
         {
           "uuid": "ceb2a7f8-69a6-41b0-a9a1-bfbc3ee7cc3b",
           "body": "{}",
-          "latency": 5000,
+          "latency": 0,
           "statusCode": 200,
           "label": "",
           "headers": [],
