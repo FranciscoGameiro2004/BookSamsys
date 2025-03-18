@@ -12,6 +12,7 @@ import { Button, Icon, TextField } from "actify";
 import { Table, TableHeader, Column, TableBody, Row, Cell } from "actify";
 import { Select, SelectOption } from "actify";
 import { RadioGroup, Radio } from "actify";
+import { Slider } from "actify";
 
 function Dashboard() {
   const apiURL = import.meta.env.VITE_API_BASE_URL;
@@ -94,7 +95,7 @@ function Dashboard() {
     await fetchBooks();
   };
 
-  const handleSortChange = (newValue: (string)) => {
+  const handleSortChange = (newValue: string) => {
     setSortBy(newValue);
   };
 
@@ -103,18 +104,20 @@ function Dashboard() {
   };
 
   const handleGenreFilterChange = (newValue: string) => {
-    setGenreFilter(newValue)
+    setGenreFilter(newValue);
   };
 
-  const handleMinPriceChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setMinPrice(+e.target.value);
-  };
-  const handleMaxPriceChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setMaxPrice(+e.target.value);
+  const handlePriceChange = (value: number | number[]) => {
+    if (typeof value === 'object') {
+      setMinPrice(+value[0]);
+      setMaxPrice(+value[1]);
+    }
   };
 
-  const handleMinRatingChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setMinRating(+e.target.value);
+  const handleMinRatingChange = (value: number | number[]) => {
+    if (typeof value === 'number') {
+      setMinRating(value);
+    }
   };
 
   const handleOnlyAvailableChange: ChangeEventHandler<
@@ -177,9 +180,7 @@ function Dashboard() {
                 <SelectOption key="&genre_eq=Children's Literature">
                   Children's Literature
                 </SelectOption>
-                <SelectOption key="&genre_eq=Adventure">
-                  Adventure
-                </SelectOption>
+                <SelectOption key="&genre_eq=Adventure">Adventure</SelectOption>
                 <SelectOption key="&genre_eq=Psychology">
                   Psychology
                 </SelectOption>
@@ -193,53 +194,33 @@ function Dashboard() {
                 </SelectOption>
                 <SelectOption key="&genre_eq=Western">Western</SelectOption>
                 <SelectOption key="&genre_eq=Religion">Religion</SelectOption>
-                <SelectOption key="&genre_eq=Mythology">
-                  Mythology
-                </SelectOption>
+                <SelectOption key="&genre_eq=Mythology">Mythology</SelectOption>
                 <SelectOption key="&genre_eq=Philosophy">
                   Philosophy
                 </SelectOption>
-                <SelectOption key="&genre_eq=Biography">
-                  Biography
-                </SelectOption>
+                <SelectOption key="&genre_eq=Biography">Biography</SelectOption>
               </Select>
             </div>
-            <div>
-              <input
-                type="range"
-                name="minPrice"
-                min={0}
-                max={maxPrice}
-                value={minPrice}
-                id="minPrice"
-                onChange={handleMinPriceChange}
-              />
-              <input
-                type="range"
-                name="maxPrice"
-                min={minPrice}
-                max={3000}
-                value={maxPrice}
-                id="maxPrice"
-                onChange={handleMaxPriceChange}
-              />
-              <p>
-                Min: {minPrice}€ | Max: {maxPrice}€
-              </p>
-            </div>
-            <div>
-              <label>Nota Mínima: {minRating}★</label>
-              <br />
-              <input
-                type="range"
-                name="maxPrice"
-                min={1}
-                max={5}
-                value={minRating}
-                id="minRating"
-                onChange={handleMinRatingChange}
-              />
-            </div>
+            <Slider
+              labeled
+              className="w-1/2"
+              label="Intervalo de Preços"
+              defaultValue={[0, 3000]}
+              value={[minPrice, maxPrice]}
+              minValue={0}
+              maxValue={2000}
+              onChange={handlePriceChange}
+            />
+            <Slider
+              labeled
+              className="w-1/2"
+              label="Nota mínima"
+              defaultValue={1}
+              value={minRating}
+              minValue={1}
+              maxValue={5}
+              onChange={handleMinRatingChange}
+            />
           </div>
           <div>
             <label htmlFor="onlyAvailable">Somente os disponíveis? </label>
