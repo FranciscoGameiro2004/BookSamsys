@@ -134,8 +134,7 @@ function Dashboard() {
             placeholder="Pesquisar"
             name="search"
             id="search"
-            onChange={handleS.
-              earchChange}
+            onChange={handleSearchChange}
             leadingIcon={<Icon>Search</Icon>}
           />
           <div>
