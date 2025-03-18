@@ -10,6 +10,8 @@ import "../css/Dashboard.css";
 import { type Book } from "../types/books";
 import { Button, Icon, TextField } from "actify";
 import { Table, TableHeader, Column, TableBody, Row, Cell } from "actify";
+import { Select, SelectOption } from "actify";
+import { RadioGroup, Radio } from "actify";
 
 function Dashboard() {
   const apiURL = import.meta.env.VITE_API_BASE_URL;
@@ -92,11 +94,11 @@ function Dashboard() {
     await fetchBooks();
   };
 
-  const handleSortChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
-    setSortBy(e.target.value);
+  const handleSortChange = (newValue) => {
+    setSortBy(newValue);
   };
 
-  const handleOrderChange = (input: "asc" | "desc") => {
+  const handleOrderChange = (input) => {
     setOrderBy(input);
   };
 
@@ -138,40 +140,24 @@ function Dashboard() {
             leadingIcon={<Icon>Search</Icon>}
           />
           <div>
-            <label htmlFor="sortBy">Ordenar por:</label>
-            <select
-              name="sortBy"
-              id="sortBy"
-              value={sortBy}
-              onChange={handleSortChange}
+            <Select
+              label="Ordenar por"
+              selectedKey={sortBy}
+              onSelectionChange={handleSortChange}
             >
-              <option value="">Selecione</option>
-              <option value="title">Nome</option>
-              <option value="author">Autor</option>
-              <option value="price">Preço</option>
-              <option value="rating">Avaliação</option>
-            </select>
+              <SelectOption key="">Selecione</SelectOption>
+              <SelectOption key="title">Nome</SelectOption>
+              <SelectOption key="author">Autor</SelectOption>
+              <SelectOption key="price">Preço</SelectOption>
+              <SelectOption key="rating">Avaliação</SelectOption>
+            </Select>
           </div>
           <div>
             <label>Por ordem:</label>
-            <div>
-              <input
-                type="radio"
-                name="orderBy"
-                id="ascRadioBtn"
-                value="asc"
-                onClick={() => handleOrderChange("asc")}
-              />
-              <label htmlFor="ascRadioBtn">Crescente</label>
-              <input
-                type="radio"
-                name="orderBy"
-                id="descRadioBtn"
-                value="desc"
-                onClick={() => handleOrderChange("desc")}
-              />
-              <label htmlFor="descRadioBtn">Derescente</label>
-            </div>
+            <RadioGroup onChange={handleOrderChange} value={orderBy}>
+              <Radio value="asc">Crescente</Radio>
+              <Radio value="desc">Decrescente</Radio>
+            </RadioGroup>
           </div>
           <div>
             <label htmlFor="">Filtros</label>
@@ -183,38 +169,48 @@ function Dashboard() {
               */}
             <div>
               <label htmlFor="sortBy">Gênero:</label>
-              <select
+              <Select
                 name="genreFilter"
                 id="genreFilter"
                 value={genreFilter}
                 onChange={handleGenreFilterChange}
               >
-                <option value="">Selecione</option>
-                <option value="&genre_eq=Fantasy">Fantasy</option>
-                <option value="&genre_eq=Science Fiction">
+                <SelectOption value="">Selecione</SelectOption>
+                <SelectOption value="&genre_eq=Fantasy">Fantasy</SelectOption>
+                <SelectOption value="&genre_eq=Science Fiction">
                   Science Fiction
-                </option>
-                <option value="&genre_eq=Comic">Comic</option>
-                <option value="&genre_eq=Poetry">Poetry</option>
-                <option value="&genre_eq=Children's Literature">
+                </SelectOption>
+                <SelectOption value="&genre_eq=Comic">Comic</SelectOption>
+                <SelectOption value="&genre_eq=Poetry">Poetry</SelectOption>
+                <SelectOption value="&genre_eq=Children's Literature">
                   Children's Literature
-                </option>
-                <option value="&genre_eq=Adventure">Adventure</option>
-                <option value="&genre_eq=Psychology">Psychology</option>
-                <option value="&genre_eq=Business">Business</option>
-                <option value="&genre_eq=Classic">Classic</option>
-                <option value="&genre_eq=Romance">Romance</option>
-                <option value="&genre_eq=Comedy">Comedy</option>
-                <option value="&genre_eq=Thriller">Thriller</option>
-                <option value="&genre_eq=Historical Fiction">
+                </SelectOption>
+                <SelectOption value="&genre_eq=Adventure">
+                  Adventure
+                </SelectOption>
+                <SelectOption value="&genre_eq=Psychology">
+                  Psychology
+                </SelectOption>
+                <SelectOption value="&genre_eq=Business">Business</SelectOption>
+                <SelectOption value="&genre_eq=Classic">Classic</SelectOption>
+                <SelectOption value="&genre_eq=Romance">Romance</SelectOption>
+                <SelectOption value="&genre_eq=Comedy">Comedy</SelectOption>
+                <SelectOption value="&genre_eq=Thriller">Thriller</SelectOption>
+                <SelectOption value="&genre_eq=Historical Fiction">
                   Historical Fiction
-                </option>
-                <option value="&genre_eq=Western">Western</option>
-                <option value="&genre_eq=Religion">Religion</option>
-                <option value="&genre_eq=Mythology">Mythology</option>
-                <option value="&genre_eq=Philosophy">Philosophy</option>
-                <option value="&genre_eq=Biography">Biography</option>
-              </select>
+                </SelectOption>
+                <SelectOption value="&genre_eq=Western">Western</SelectOption>
+                <SelectOption value="&genre_eq=Religion">Religion</SelectOption>
+                <SelectOption value="&genre_eq=Mythology">
+                  Mythology
+                </SelectOption>
+                <SelectOption value="&genre_eq=Philosophy">
+                  Philosophy
+                </SelectOption>
+                <SelectOption value="&genre_eq=Biography">
+                  Biography
+                </SelectOption>
+              </Select>
             </div>
             <div>
               <input
@@ -266,7 +262,7 @@ function Dashboard() {
           <Button type="submit">Procurar</Button>
         </form>
       </div>
-      
+
       <Table
         aria-label="Lista de Livros"
         style={{ height: "210px", maxWidth: "400px" }}
