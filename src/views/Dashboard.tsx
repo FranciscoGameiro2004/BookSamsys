@@ -265,7 +265,7 @@ function Dashboard() {
           <Button type="submit">Procurar</Button>
         </form>
       </div>
-      <hr />
+      
       <Table
         aria-label="Lista de Livros"
         style={{ height: "210px", maxWidth: "400px" }}

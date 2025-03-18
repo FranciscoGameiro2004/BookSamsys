@@ -1,10 +1,6 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
-@tailwind base;
-@tailwind components;
 @tailwind utilities;
-
-
 
 :root {
   --md-sys-color-background: 255 248 243;
@@ -44,6 +40,5 @@
   --md-sys-color-on-error: 255 255 255;
   --md-sys-color-error-container: 255 218 214;
   --md-sys-color-on-error-container: 65 0 2;
+  font-family: "Roboto", sans-serif;
 }
-
-
