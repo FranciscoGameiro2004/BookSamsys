@@ -3,6 +3,9 @@ import "../css/Dashboard.css";
 
 import { type Book } from "../types/books";
 
+import '@material/web/button/elevated-button.js'
+import '@material/web/iconbutton/filled-icon-button.js'
+
 function Dashboard() {
   const apiURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -92,7 +95,7 @@ function Dashboard() {
             </div>
           </div>
           <br />
-          <input type="submit" value="Procurar" />
+          <md-elevated-button type="submit" >Procurar</md-elevated-button>
         </form>
       </div>
       <hr />
@@ -127,10 +130,10 @@ function Dashboard() {
         </tbody>
       </table>
       <div>
-        {page > 1 && <button type="button" onClick={() => handleClickPage('previous')}>{'<'}</button>}
+        {page > 1 && <md-filled-icon-button aria-label="Anterior" onClick={() => handleClickPage('previous')}>{'<'}</md-filled-icon-button>}
         <label>Page {page}</label>
         {//! Não consigo buscar limite da paginação pela API
-        page < Math.floor(100/quantityPerPage) + (100%quantityPerPage > 0 ? 1 : 0) && <button type="button"  onClick={() => handleClickPage('next')}>{'>'}</button>}
+        page < Math.floor(100/quantityPerPage) + (100%quantityPerPage > 0 ? 1 : 0) && <md-filled-icon-button aria-label="Seguinte"  onClick={() => handleClickPage('next')}>{'>'}</md-filled-icon-button>}
       </div>
     </>
   );
