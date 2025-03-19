@@ -7,10 +7,19 @@ import {
 import "../css/Dashboard.css";
 
 import { type Book } from "../types/books";
+import { type SelectChangeEvent } from "@mui/material";
 
-import { Button, IconButton } from "@mui/material";
-import { TableContainer, Table, TableHead, TableBody, TableRow, TableCell } from "@mui/material";
+import { Button, IconButton, FormControl } from "@mui/material";
+import {
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@mui/material";
 import { TextField } from "@mui/material";
+import { Select, MenuItem, InputLabel } from "@mui/material";
 import { NavigateNext, NavigateBefore } from "@mui/icons-material";
 import { Paper } from "@mui/material";
 
@@ -95,7 +104,7 @@ function Dashboard() {
     await fetchBooks();
   };
 
-  const handleSortChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+  const handleSortChange = (e: SelectChangeEvent<string>) => {
     setSortBy(e.target.value);
   };
 
@@ -103,9 +112,7 @@ function Dashboard() {
     setOrderBy(input);
   };
 
-  const handleGenreFilterChange: ChangeEventHandler<HTMLSelectElement> = (
-    e
-  ) => {
+  const handleGenreFilterChange = (e: SelectChangeEvent<string>) => {
     setGenreFilter(e.target.value);
   };
 
@@ -138,19 +145,23 @@ function Dashboard() {
             onChange={handleSearchChange}
           />
           <div>
-            <label htmlFor="sortBy">Ordenar por:</label>
-            <select
-              name="sortBy"
-              id="sortBy"
-              value={sortBy}
-              onChange={handleSortChange}
-            >
-              <option value="">Selecione</option>
-              <option value="title">Nome</option>
-              <option value="author">Autor</option>
-              <option value="price">Preço</option>
-              <option value="rating">Avaliação</option>
-            </select>
+            <FormControl sx={{ m: 1, minWidth: 150 }}>
+              <InputLabel id="sortByLabel">Ordenar por</InputLabel>
+              <Select
+                label="Ordenar por"
+                labelId="sortByLabel"
+                name="sortBy"
+                id="sortBy"
+                value={sortBy}
+                onChange={handleSortChange}
+              >
+                <MenuItem value="">Nenhum</MenuItem>
+                <MenuItem value="title">Nome</MenuItem>
+                <MenuItem value="author">Autor</MenuItem>
+                <MenuItem value="price">Preço</MenuItem>
+                <MenuItem value="rating">Avaliação</MenuItem>
+              </Select>
+            </FormControl>
           </div>
           <div>
             <label>Por ordem:</label>
@@ -182,39 +193,43 @@ function Dashboard() {
                 [] Disponibilidade (t/f)
               */}
             <div>
-              <label htmlFor="sortBy">Gênero:</label>
-              <select
-                name="genreFilter"
-                id="genreFilter"
-                value={genreFilter}
-                onChange={handleGenreFilterChange}
-              >
-                <option value="">Selecione</option>
-                <option value="&genre_eq=Fantasy">Fantasy</option>
-                <option value="&genre_eq=Science Fiction">
-                  Science Fiction
-                </option>
-                <option value="&genre_eq=Comic">Comic</option>
-                <option value="&genre_eq=Poetry">Poetry</option>
-                <option value="&genre_eq=Children's Literature">
-                  Children's Literature
-                </option>
-                <option value="&genre_eq=Adventure">Adventure</option>
-                <option value="&genre_eq=Psychology">Psychology</option>
-                <option value="&genre_eq=Business">Business</option>
-                <option value="&genre_eq=Classic">Classic</option>
-                <option value="&genre_eq=Romance">Romance</option>
-                <option value="&genre_eq=Comedy">Comedy</option>
-                <option value="&genre_eq=Thriller">Thriller</option>
-                <option value="&genre_eq=Historical Fiction">
-                  Historical Fiction
-                </option>
-                <option value="&genre_eq=Western">Western</option>
-                <option value="&genre_eq=Religion">Religion</option>
-                <option value="&genre_eq=Mythology">Mythology</option>
-                <option value="&genre_eq=Philosophy">Philosophy</option>
-                <option value="&genre_eq=Biography">Biography</option>
-              </select>
+              <FormControl sx={{m: 1, minWidth:100}}>
+              <InputLabel id="genreLabel">Gênero</InputLabel>
+                <Select
+                  labelId="genreLabel"
+                  label="Gênero"
+                  name="genreFilter"
+                  id="genreFilter"
+                  value={genreFilter}
+                  onChange={handleGenreFilterChange}
+                >
+                  <MenuItem value="">Todos</MenuItem>
+                  <MenuItem value="&genre_eq=Fantasy">Fantasy</MenuItem>
+                  <MenuItem value="&genre_eq=Science Fiction">
+                    Science Fiction
+                  </MenuItem>
+                  <MenuItem value="&genre_eq=Comic">Comic</MenuItem>
+                  <MenuItem value="&genre_eq=Poetry">Poetry</MenuItem>
+                  <MenuItem value="&genre_eq=Children's Literature">
+                    Children's Literature
+                  </MenuItem>
+                  <MenuItem value="&genre_eq=Adventure">Adventure</MenuItem>
+                  <MenuItem value="&genre_eq=Psychology">Psychology</MenuItem>
+                  <MenuItem value="&genre_eq=Business">Business</MenuItem>
+                  <MenuItem value="&genre_eq=Classic">Classic</MenuItem>
+                  <MenuItem value="&genre_eq=Romance">Romance</MenuItem>
+                  <MenuItem value="&genre_eq=Comedy">Comedy</MenuItem>
+                  <MenuItem value="&genre_eq=Thriller">Thriller</MenuItem>
+                  <MenuItem value="&genre_eq=Historical Fiction">
+                    Historical Fiction
+                  </MenuItem>
+                  <MenuItem value="&genre_eq=Western">Western</MenuItem>
+                  <MenuItem value="&genre_eq=Religion">Religion</MenuItem>
+                  <MenuItem value="&genre_eq=Mythology">Mythology</MenuItem>
+                  <MenuItem value="&genre_eq=Philosophy">Philosophy</MenuItem>
+                  <MenuItem value="&genre_eq=Biography">Biography</MenuItem>
+                </Select>
+              </FormControl>
             </div>
             <div>
               <input
@@ -270,34 +285,42 @@ function Dashboard() {
       </div>
       <hr />
       <TableContainer component={Paper}>
-      <Table stickyHeader border={1} sx={{ minWidth: 1500 }}  size="small" aria-label="Tabela de livros">
-        <TableHead>
-          <TableRow>
-            <TableCell>Título</TableCell>
-            <TableCell align="right">Autor</TableCell>
-            <TableCell align="right">Editora</TableCell>
-            <TableCell align="right">Gênero</TableCell>
-            <TableCell align="right">ISBN</TableCell>
-            <TableCell align="right">Preço (€)</TableCell>
-            <TableCell align="right">Avaliação</TableCell>
-            <TableCell align="right">Disponibilidade</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {booksList.map((book) => (
-            <TableRow key={book.uuid}>
-              <TableCell>{book.title}</TableCell>
-              <TableCell align="right">{book.author}</TableCell>
-              <TableCell align="right">{book.publisher}</TableCell>
-              <TableCell align="right">{book.genre}</TableCell>
-              <TableCell align="right">{book.isbn}</TableCell>
-              <TableCell align="right">{book.price}€</TableCell>
-              <TableCell align="right">{book.rating}/5</TableCell>
-              <TableCell align="right">{book.available ? "Em Stock" : "Fora de Stock"}</TableCell>
+        <Table
+          stickyHeader
+          border={1}
+          sx={{ minWidth: 1500 }}
+          size="small"
+          aria-label="Tabela de livros"
+        >
+          <TableHead>
+            <TableRow>
+              <TableCell>Título</TableCell>
+              <TableCell align="right">Autor</TableCell>
+              <TableCell align="right">Editora</TableCell>
+              <TableCell align="right">Gênero</TableCell>
+              <TableCell align="right">ISBN</TableCell>
+              <TableCell align="right">Preço (€)</TableCell>
+              <TableCell align="right">Avaliação</TableCell>
+              <TableCell align="right">Disponibilidade</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {booksList.map((book) => (
+              <TableRow key={book.uuid}>
+                <TableCell>{book.title}</TableCell>
+                <TableCell align="right">{book.author}</TableCell>
+                <TableCell align="right">{book.publisher}</TableCell>
+                <TableCell align="right">{book.genre}</TableCell>
+                <TableCell align="right">{book.isbn}</TableCell>
+                <TableCell align="right">{book.price}€</TableCell>
+                <TableCell align="right">{book.rating}/5</TableCell>
+                <TableCell align="right">
+                  {book.available ? "Em Stock" : "Fora de Stock"}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </TableContainer>
       <div>
         {page > 1 && (
