@@ -16,7 +16,20 @@ import BookResults from "../components/views/dashboard/BookResults";
 import BookSearch from "../components/views/dashboard/BookSearch";
 
 import { Add } from "@mui/icons-material";
-import { Button } from "@mui/material";
+import {
+  Button,
+  Modal,
+  Box,
+  Typography,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Rating,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
 
 function Dashboard() {
   const apiURL = import.meta.env.VITE_API_BASE_URL;
@@ -60,6 +73,8 @@ function Dashboard() {
   );
   const [minRating, setMinRating] = useState(1);
   const [onlyAvailable, setOnlyAvailable] = useState(false);
+
+  const [openAddBookModal, setOpenAddBookModal] = useState(false);
 
   useEffect(() => {
     fetchBooks();
@@ -153,10 +168,25 @@ function Dashboard() {
     setOnlyAvailable((previousValue) => !previousValue);
   };
 
+  const handleOpenAddBookModal = () => setOpenAddBookModal(true);
+  const handleCloseAddBookModal = () => setOpenAddBookModal(false);
+
   return (
     <div className="dashboardContainer">
       <div className="addBtnContainer">
-        <Button sx={{width: 60, height: 60, borderRadius: 100, backgroundColor: "red", m:8}} variant="contained" onClick={() => {}}><Add/></Button>
+        <Button
+          sx={{
+            width: 60,
+            height: 60,
+            borderRadius: 100,
+            backgroundColor: "red",
+            m: 8,
+          }}
+          variant="contained"
+          onClick={handleOpenAddBookModal}
+        >
+          <Add />
+        </Button>
       </div>
       <h1>Livros</h1>
       <BookSearch
@@ -184,6 +214,91 @@ function Dashboard() {
         quantityPerPage={quantityPerPage}
         handleClickPage={handleClickPage}
       />
+      <Modal open={openAddBookModal} onClose={handleCloseAddBookModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Adicionar Livro
+          </Typography>
+          <form action="">
+            <TextField
+              required
+              label="Título"
+              sx={{ width: "100%", m: 1 }}
+            ></TextField>
+            <TextField
+              required
+              label="Autor"
+              sx={{ width: "100%", m: 1 }}
+            ></TextField>
+            <FormControl sx={{ m: 1, width: "100%" }}>
+              <InputLabel id="genreLabel">Gênero</InputLabel>
+              <Select
+                labelId="genreLabel"
+                label="Gênero"
+                name="genreFilter"
+                id="genreFilter"
+                value={""}
+                required
+              >
+                <MenuItem value="">Todos</MenuItem>
+                {bookCategories.map((genre) => (
+                  <MenuItem value={`&genre_eq=${genre}`}>{genre}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <TextField
+              required
+              label="Editora"
+              sx={{ width: "100%", m: 1 }}
+            ></TextField>
+            <TextField
+              required
+              label="ISBN"
+              sx={{ width: "100%", m: 1 }}
+            ></TextField>
+            <TextField
+              required
+              label="Editora"
+              sx={{ width: "100%", m: 1 }}
+            ></TextField>
+            <TextField
+              required
+              type="number"
+              label="Preço (€)"
+              sx={{ width: "100%", m: 1 }}
+            ></TextField>
+            <Box sx={{ width: "100%", m: 1 }}>
+              <Typography>Avaliação</Typography>
+              <Rating value={1} onChange={() => {}} />
+            </Box>
+            <FormControlLabel
+              sx={{ width: "100%", m: 1 }}
+              control={
+                <Checkbox />
+              }
+              label="Livro em stock?"
+            />
+            <div>
+              <Button variant="contained" type="submit">
+                Adicionar
+              </Button>
+              <Button variant="outlined">Cancelar</Button>
+            </div>
+          </form>
+        </Box>
+      </Modal>
     </div>
   );
 }
