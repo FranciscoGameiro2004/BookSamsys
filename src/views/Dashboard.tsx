@@ -15,6 +15,9 @@ import { type SelectChangeEvent } from "@mui/material";
 import BookResults from "../components/views/dashboard/BookResults";
 import BookSearch from "../components/views/dashboard/BookSearch";
 
+import { Add } from "@mui/icons-material";
+import { Button } from "@mui/material";
+
 function Dashboard() {
   const apiURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -151,7 +154,10 @@ function Dashboard() {
   };
 
   return (
-    <>
+    <div className="dashboardContainer">
+      <div className="addBtnContainer">
+        <Button sx={{width: 60, height: 60, borderRadius: 100, backgroundColor: "red", m:8}} variant="contained" onClick={() => {}}><Add/></Button>
+      </div>
       <h1>Livros</h1>
       <BookSearch
         search={search}
@@ -178,7 +184,7 @@ function Dashboard() {
         quantityPerPage={quantityPerPage}
         handleClickPage={handleClickPage}
       />
-    </>
+    </div>
   );
 }
 
