@@ -1,4 +1,5 @@
-import { useState } from "react";
+import './css/bookResults.css'
+
 import {
   IconButton,
   TableContainer,
@@ -60,7 +61,7 @@ export default function BookResults({booksList, page, quantityPerPage, handleCli
           </TableBody>
         </Table>
       </TableContainer>
-      <div>
+      <div className='page-container'>
         {page > 1 && (
           <IconButton
             onClick={() => handleClickPage("previous")}
