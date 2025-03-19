@@ -15,34 +15,10 @@ import { type SelectChangeEvent } from "@mui/material";
 import BookResults from "../components/views/dashboard/BookResults";
 import BookSearch from "../components/views/dashboard/BookSearch";
 
-import {
-  Button,
-  IconButton,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-} from "@mui/material";
-import {
-  TableContainer,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-} from "@mui/material";
-import { TextField } from "@mui/material";
-import { Select, MenuItem, InputLabel } from "@mui/material";
-import { Radio, RadioGroup } from "@mui/material";
-import { Checkbox } from "@mui/material";
-import { NavigateNext, NavigateBefore } from "@mui/icons-material";
-import { Box, Slider, Typography, Rating } from "@mui/material";
-import { Paper } from "@mui/material";
-
 function Dashboard() {
   const apiURL = import.meta.env.VITE_API_BASE_URL;
 
   const bookCategories = [
-    "Todos",
     "Fantasy",
     "Science Fiction",
     "Comic",
