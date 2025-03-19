@@ -16,7 +16,21 @@ import BookResults from "../components/views/dashboard/BookResults";
 import BookSearch from "../components/views/dashboard/BookSearch";
 
 import { Add } from "@mui/icons-material";
-import { Button } from "@mui/material";
+import {
+  Button,
+  Modal,
+  Box,
+  Typography,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Rating,
+  FormControlLabel,
+  Checkbox,
+  Alert,
+} from "@mui/material";
 
 function Dashboard() {
   const apiURL = import.meta.env.VITE_API_BASE_URL;
@@ -60,6 +74,17 @@ function Dashboard() {
   );
   const [minRating, setMinRating] = useState(1);
   const [onlyAvailable, setOnlyAvailable] = useState(false);
+
+  const [openAddBookModal, setOpenAddBookModal] = useState(false);
+
+  const [newBookName, setNewBookName] = useState("");
+  const [newBookAuthor, setNewBookAuthor] = useState("");
+  const [newBookGenre, setNewBookGenre] = useState("");
+  const [newBookPublisher, setNewBookPublisher] = useState("");
+  const [newBookISBN, setNewBookISBN] = useState("");
+  const [newBookPrice, setNewBookPrice] = useState("");
+  const [newBookRating, setNewBookRating] = useState(1);
+  const [newBookAvailable, setNewBookAvailable] = useState(false);
 
   useEffect(() => {
     fetchBooks();
@@ -153,10 +178,93 @@ function Dashboard() {
     setOnlyAvailable((previousValue) => !previousValue);
   };
 
+  const handleOpenAddBookModal = () => setOpenAddBookModal(true);
+  const handleCloseAddBookModal = () => setOpenAddBookModal(false);
+
+  const handleNewBookNameChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setNewBookName(e.target.value);
+  };
+
+  const handleNewBookAuthorChange: ChangeEventHandler<HTMLInputElement> = (
+    e
+  ) => {
+    setNewBookAuthor(e.target.value);
+  };
+
+  const handleNewBookGenreChange = (e: SelectChangeEvent<string>) => {
+    setNewBookGenre(e.target.value);
+  };
+
+  const handleNewBookPublisherChange: ChangeEventHandler<HTMLInputElement> = (
+    e
+  ) => {
+    setNewBookPublisher(e.target.value);
+  };
+
+  const handleNewBookISBNChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setNewBookISBN(e.target.value);
+  };
+
+  const handleNewBookPriceChange: ChangeEventHandler<HTMLInputElement> = (
+    e
+  ) => {
+    setNewBookPrice(e.target.value);
+  };
+
+  const handleNewBookRatingChange = (
+    e: SyntheticEvent<Element, Event>,
+    value: number | null
+  ) => {
+    if (typeof value === "number") {
+      setNewBookRating(value);
+    }
+  };
+
+  const handleNewBookAvailableChange: ChangeEventHandler<
+    HTMLInputElement
+  > = () => {
+    setOnlyAvailable((previousValue) => !previousValue);
+  };
+
+  const handleNewBookSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(apiURL + "books", {
+        method: "POST",
+        body: JSON.stringify({
+          isbn: newBookISBN,
+          title: newBookName,
+          author: newBookAuthor,
+          publisher: newBookPublisher,
+          genre: newBookPublisher,
+          price: newBookPrice,
+          rating: newBookRating,
+          available: newBookAvailable,
+        }),
+      });
+      setOpenAddBookModal(false);
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="dashboardContainer">
       <div className="addBtnContainer">
-        <Button sx={{width: 60, height: 60, borderRadius: 100, backgroundColor: "red", m:8}} variant="contained" onClick={() => {}}><Add/></Button>
+        <Button
+          sx={{
+            width: 60,
+            height: 60,
+            borderRadius: 100,
+            backgroundColor: "red",
+            m: 8,
+          }}
+          variant="contained"
+          onClick={handleOpenAddBookModal}
+        >
+          <Add />
+        </Button>
       </div>
       <h1>Livros</h1>
       <BookSearch
@@ -184,6 +292,105 @@ function Dashboard() {
         quantityPerPage={quantityPerPage}
         handleClickPage={handleClickPage}
       />
+      <Modal open={openAddBookModal} onClose={handleCloseAddBookModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography id="modal-modal-title" variant="h5" component="h2">
+            Adicionar Livro
+          </Typography>
+          <form action="#" onSubmit={handleNewBookSubmit}>
+            <TextField
+              required
+              label="Título"
+              sx={{ width: "100%", m: 1 }}
+              value={newBookName}
+              onChange={handleNewBookNameChange}
+            ></TextField>
+            <TextField
+              required
+              label="Autor"
+              sx={{ width: "100%", m: 1 }}
+              value={newBookAuthor}
+              onChange={handleNewBookAuthorChange}
+            ></TextField>
+            <FormControl sx={{ m: 1, width: "100%" }}>
+              <InputLabel id="genreLabel">Gênero</InputLabel>
+              <Select
+                labelId="genreLabel"
+                label="Gênero"
+                name="genreFilter"
+                id="genreFilter"
+                value={newBookGenre}
+                onChange={handleNewBookGenreChange}
+                required
+              >
+                <MenuItem value="">Todos</MenuItem>
+                {bookCategories.map((genre, idx) => (
+                  <MenuItem key={idx} value={`&genre_eq=${genre}`}>
+                    {genre}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <TextField
+              required
+              label="Editora"
+              sx={{ width: "100%", m: 1 }}
+              value={newBookPublisher}
+              onChange={handleNewBookPublisherChange}
+            ></TextField>
+            <TextField
+              required
+              label="ISBN"
+              sx={{ width: "100%", m: 1 }}
+              value={newBookISBN}
+              onChange={handleNewBookISBNChange}
+            ></TextField>
+            <TextField
+              required
+              type="number"
+              label="Preço (€)"
+              sx={{ width: "100%", m: 1 }}
+              value={newBookPrice}
+              onChange={handleNewBookPriceChange}
+            ></TextField>
+            <Box sx={{ width: "100%", m: 1 }}>
+              <Typography>Avaliação</Typography>
+              <Rating
+                value={newBookRating}
+                onChange={handleNewBookRatingChange}
+              />
+            </Box>
+            <FormControlLabel
+              sx={{ width: "100%", m: 1 }}
+              control={
+                <Checkbox
+                  value={newBookAvailable}
+                  onChange={handleNewBookAvailableChange}
+                />
+              }
+              label="Livro em stock?"
+            />
+            <div>
+              <Button variant="contained" type="submit">
+                Adicionar
+              </Button>
+              <Button variant="outlined">Cancelar</Button>
+            </div>
+          </form>
+        </Box>
+      </Modal>
     </div>
   );
 }
