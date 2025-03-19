@@ -1,4 +1,4 @@
-import { useState, useEffect, ChangeEventHandler, FormEventHandler, MouseEventHandler } from "react";
+import { useState, useEffect, ChangeEventHandler, FormEventHandler } from "react";
 import "../css/Dashboard.css";
 
 import { type Book } from "../types/books";
@@ -94,7 +94,7 @@ function Dashboard() {
     setMinRating(+e.target.value)
   }
 
-  const handleOnlyAvailableChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+  const handleOnlyAvailableChange: ChangeEventHandler<HTMLInputElement> = () => {
     setOnlyAvailable(previousValue => !previousValue)
   }
 
