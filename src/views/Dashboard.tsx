@@ -9,7 +9,9 @@ import "../css/Dashboard.css";
 import { type Book } from "../types/books";
 
 import { Button, IconButton } from "@mui/material";
+import { TableContainer, Table, TableHead, TableBody, TableRow, TableCell } from "@mui/material";
 import { NavigateNext, NavigateBefore } from "@mui/icons-material";
+import { Paper } from "@mui/material";
 
 function Dashboard() {
   const apiURL = import.meta.env.VITE_API_BASE_URL;
@@ -268,34 +270,36 @@ function Dashboard() {
         </form>
       </div>
       <hr />
-      <table border={1}>
-        <thead>
-          <tr>
-            <th>ISBN</th>
-            <th>Título</th>
-            <th>Autor</th>
-            <th>Editora</th>
-            <th>Gênero</th>
-            <th>Preço (€)</th>
-            <th>Avaliação</th>
-            <th>Disponibilidade</th>
-          </tr>
-        </thead>
-        <tbody>
+      <TableContainer component={Paper}>
+      <Table stickyHeader border={1} sx={{ minWidth: 1500 }}  size="small" aria-label="Tabela de livros">
+        <TableHead>
+          <TableRow>
+            <TableCell>Título</TableCell>
+            <TableCell align="right">Autor</TableCell>
+            <TableCell align="right">Editora</TableCell>
+            <TableCell align="right">Gênero</TableCell>
+            <TableCell align="right">ISBN</TableCell>
+            <TableCell align="right">Preço (€)</TableCell>
+            <TableCell align="right">Avaliação</TableCell>
+            <TableCell align="right">Disponibilidade</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {booksList.map((book) => (
-            <tr key={book.uuid}>
-              <td>{book.isbn}</td>
-              <td>{book.title}</td>
-              <td>{book.author}</td>
-              <td>{book.publisher}</td>
-              <td>{book.genre}</td>
-              <td>{book.price}€</td>
-              <td>{book.rating}/5</td>
-              <td>{book.available ? "Em Stock" : "Fora de Stock"}</td>
-            </tr>
+            <TableRow key={book.uuid}>
+              <TableCell>{book.title}</TableCell>
+              <TableCell align="right">{book.author}</TableCell>
+              <TableCell align="right">{book.publisher}</TableCell>
+              <TableCell align="right">{book.genre}</TableCell>
+              <TableCell align="right">{book.isbn}</TableCell>
+              <TableCell align="right">{book.price}€</TableCell>
+              <TableCell align="right">{book.rating}/5</TableCell>
+              <TableCell align="right">{book.available ? "Em Stock" : "Fora de Stock"}</TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
+      </TableContainer>
       <div>
         {page > 1 && (
           <IconButton
