@@ -29,6 +29,7 @@ import {
   Rating,
   FormControlLabel,
   Checkbox,
+  Alert,
 } from "@mui/material";
 
 function Dashboard() {
@@ -75,6 +76,15 @@ function Dashboard() {
   const [onlyAvailable, setOnlyAvailable] = useState(false);
 
   const [openAddBookModal, setOpenAddBookModal] = useState(false);
+
+  const [newBookName, setNewBookName] = useState("");
+  const [newBookAuthor, setNewBookAuthor] = useState("");
+  const [newBookGenre, setNewBookGenre] = useState("");
+  const [newBookPublisher, setNewBookPublisher] = useState("");
+  const [newBookISBN, setNewBookISBN] = useState("");
+  const [newBookPrice, setNewBookPrice] = useState("");
+  const [newBookRating, setNewBookRating] = useState(1);
+  const [newBookAvailable, setNewBookAvailable] = useState(false);
 
   useEffect(() => {
     fetchBooks();
@@ -171,6 +181,74 @@ function Dashboard() {
   const handleOpenAddBookModal = () => setOpenAddBookModal(true);
   const handleCloseAddBookModal = () => setOpenAddBookModal(false);
 
+  const handleNewBookNameChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setNewBookName(e.target.value);
+  };
+
+  const handleNewBookAuthorChange: ChangeEventHandler<HTMLInputElement> = (
+    e
+  ) => {
+    setNewBookAuthor(e.target.value);
+  };
+
+  const handleNewBookGenreChange = (e: SelectChangeEvent<string>) => {
+    setNewBookGenre(e.target.value);
+  };
+
+  const handleNewBookPublisherChange: ChangeEventHandler<HTMLInputElement> = (
+    e
+  ) => {
+    setNewBookPublisher(e.target.value);
+  };
+
+  const handleNewBookISBNChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setNewBookISBN(e.target.value);
+  };
+
+  const handleNewBookPriceChange: ChangeEventHandler<HTMLInputElement> = (
+    e
+  ) => {
+    setNewBookPrice(e.target.value);
+  };
+
+  const handleNewBookRatingChange = (
+    e: SyntheticEvent<Element, Event>,
+    value: number | null
+  ) => {
+    if (typeof value === "number") {
+      setNewBookRating(value);
+    }
+  };
+
+  const handleNewBookAvailableChange: ChangeEventHandler<
+    HTMLInputElement
+  > = () => {
+    setOnlyAvailable((previousValue) => !previousValue);
+  };
+
+  const handleNewBookSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(apiURL + "books", {
+        method: "POST",
+        body: JSON.stringify({
+          isbn: newBookISBN,
+          title: newBookName,
+          author: newBookAuthor,
+          publisher: newBookPublisher,
+          genre: newBookPublisher,
+          price: newBookPrice,
+          rating: newBookRating,
+          available: newBookAvailable,
+        }),
+      });
+      setOpenAddBookModal(false);
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="dashboardContainer">
       <div className="addBtnContainer">
@@ -228,19 +306,23 @@ function Dashboard() {
             p: 4,
           }}
         >
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <Typography id="modal-modal-title" variant="h5" component="h2">
             Adicionar Livro
           </Typography>
-          <form action="">
+          <form action="#" onSubmit={handleNewBookSubmit}>
             <TextField
               required
               label="Título"
               sx={{ width: "100%", m: 1 }}
+              value={newBookName}
+              onChange={handleNewBookNameChange}
             ></TextField>
             <TextField
               required
               label="Autor"
               sx={{ width: "100%", m: 1 }}
+              value={newBookAuthor}
+              onChange={handleNewBookAuthorChange}
             ></TextField>
             <FormControl sx={{ m: 1, width: "100%" }}>
               <InputLabel id="genreLabel">Gênero</InputLabel>
@@ -249,12 +331,15 @@ function Dashboard() {
                 label="Gênero"
                 name="genreFilter"
                 id="genreFilter"
-                value={""}
+                value={newBookGenre}
+                onChange={handleNewBookGenreChange}
                 required
               >
                 <MenuItem value="">Todos</MenuItem>
-                {bookCategories.map((genre) => (
-                  <MenuItem value={`&genre_eq=${genre}`}>{genre}</MenuItem>
+                {bookCategories.map((genre, idx) => (
+                  <MenuItem key={idx} value={`&genre_eq=${genre}`}>
+                    {genre}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -262,31 +347,38 @@ function Dashboard() {
               required
               label="Editora"
               sx={{ width: "100%", m: 1 }}
+              value={newBookPublisher}
+              onChange={handleNewBookPublisherChange}
             ></TextField>
             <TextField
               required
               label="ISBN"
               sx={{ width: "100%", m: 1 }}
-            ></TextField>
-            <TextField
-              required
-              label="Editora"
-              sx={{ width: "100%", m: 1 }}
+              value={newBookISBN}
+              onChange={handleNewBookISBNChange}
             ></TextField>
             <TextField
               required
               type="number"
               label="Preço (€)"
               sx={{ width: "100%", m: 1 }}
+              value={newBookPrice}
+              onChange={handleNewBookPriceChange}
             ></TextField>
             <Box sx={{ width: "100%", m: 1 }}>
               <Typography>Avaliação</Typography>
-              <Rating value={1} onChange={() => {}} />
+              <Rating
+                value={newBookRating}
+                onChange={handleNewBookRatingChange}
+              />
             </Box>
             <FormControlLabel
               sx={{ width: "100%", m: 1 }}
               control={
-                <Checkbox />
+                <Checkbox
+                  value={newBookAvailable}
+                  onChange={handleNewBookAvailableChange}
+                />
               }
               label="Livro em stock?"
             />
