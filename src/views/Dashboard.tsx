@@ -3,7 +3,7 @@ import {
   useEffect,
   ChangeEventHandler,
   FormEventHandler,
-  SyntheticEvent
+  SyntheticEvent,
 } from "react";
 import "../css/Dashboard.css";
 
@@ -13,6 +13,7 @@ import { type Book } from "../types/books";
 import { type SelectChangeEvent } from "@mui/material";
 
 import BookResults from "../components/views/dashboard/BookResults";
+import BookSearch from "../components/views/dashboard/BookSearch";
 
 import {
   Button,
@@ -39,6 +40,28 @@ import { Paper } from "@mui/material";
 
 function Dashboard() {
   const apiURL = import.meta.env.VITE_API_BASE_URL;
+
+  const bookCategories = [
+    "Todos",
+    "Fantasy",
+    "Science Fiction",
+    "Comic",
+    "Poetry",
+    "Children's Literature",
+    "Adventure",
+    "Psychology",
+    "Business",
+    "Classic",
+    "Romance",
+    "Comedy",
+    "Thriller",
+    "Historical Fiction",
+    "Western",
+    "Religion",
+    "Mythology",
+    "Philosophy",
+    "Biography",
+  ];
 
   const [booksList, setBooksList] = useState<Book[]>([]);
   const [loading, setLoading] = useState(false);
@@ -132,12 +155,15 @@ function Dashboard() {
     setGenreFilter(e.target.value);
   };
 
-  const handlePriceRangeChange = (e, newValue: number | number[]) => {
+  const handlePriceRangeChange = (e: Event, newValue: number | number[]) => {
     setPriceRange(newValue as number[]);
   };
 
-  const handleMinRatingChange = (e: SyntheticEvent, newValue: number | null) => {
-    if (typeof newValue === 'number') {
+  const handleMinRatingChange = (
+    e: SyntheticEvent,
+    newValue: number | null
+  ) => {
+    if (typeof newValue === "number") {
       setMinRating(newValue);
     }
   };
@@ -151,115 +177,31 @@ function Dashboard() {
   return (
     <>
       <h1>Livros</h1>
-      <div>
-        <form action="#" onSubmit={handleFormSubmit}>
-          <TextField
-            value={search}
-            label="Pesquisar"
-            id="search"
-            onChange={handleSearchChange}
-          />
-          <div>
-            <FormControl sx={{ m: 1, minWidth: 150 }}>
-              <InputLabel id="sortByLabel">Ordenar por</InputLabel>
-              <Select
-                label="Ordenar por"
-                labelId="sortByLabel"
-                name="sortBy"
-                id="sortBy"
-                value={sortBy}
-                onChange={handleSortChange}
-              >
-                <MenuItem value="">Nenhum</MenuItem>
-                <MenuItem value="title">Nome</MenuItem>
-                <MenuItem value="author">Autor</MenuItem>
-                <MenuItem value="price">Preço</MenuItem>
-                <MenuItem value="rating">Avaliação</MenuItem>
-              </Select>
-            </FormControl>
-          </div>
-          <div>
-            <FormControl>
-              <FormLabel id="orderByLabel">Por ordem</FormLabel>
-              <RadioGroup value={orderBy} onChange={handleOrderChange}>
-                <FormControlLabel
-                  value="asc"
-                  control={<Radio />}
-                  label="Crescente"
-                />
-                <FormControlLabel
-                  value="desc"
-                  control={<Radio />}
-                  label="Derescente"
-                />
-              </RadioGroup>
-            </FormControl>
-          </div>
-          <div>
-            <label htmlFor="">Filtros</label>
-            <FormControl sx={{ m: 1, minWidth: 100 }}>
-              <InputLabel id="genreLabel">Gênero</InputLabel>
-              <Select
-                labelId="genreLabel"
-                label="Gênero"
-                name="genreFilter"
-                id="genreFilter"
-                value={genreFilter}
-                onChange={handleGenreFilterChange}
-              >
-                <MenuItem value="">Todos</MenuItem>
-                <MenuItem value="&genre_eq=Fantasy">Fantasy</MenuItem>
-                <MenuItem value="&genre_eq=Science Fiction">
-                  Science Fiction
-                </MenuItem>
-                <MenuItem value="&genre_eq=Comic">Comic</MenuItem>
-                <MenuItem value="&genre_eq=Poetry">Poetry</MenuItem>
-                <MenuItem value="&genre_eq=Children's Literature">
-                  Children's Literature
-                </MenuItem>
-                <MenuItem value="&genre_eq=Adventure">Adventure</MenuItem>
-                <MenuItem value="&genre_eq=Psychology">Psychology</MenuItem>
-                <MenuItem value="&genre_eq=Business">Business</MenuItem>
-                <MenuItem value="&genre_eq=Classic">Classic</MenuItem>
-                <MenuItem value="&genre_eq=Romance">Romance</MenuItem>
-                <MenuItem value="&genre_eq=Comedy">Comedy</MenuItem>
-                <MenuItem value="&genre_eq=Thriller">Thriller</MenuItem>
-                <MenuItem value="&genre_eq=Historical Fiction">
-                  Historical Fiction
-                </MenuItem>
-                <MenuItem value="&genre_eq=Western">Western</MenuItem>
-                <MenuItem value="&genre_eq=Religion">Religion</MenuItem>
-                <MenuItem value="&genre_eq=Mythology">Mythology</MenuItem>
-                <MenuItem value="&genre_eq=Philosophy">Philosophy</MenuItem>
-                <MenuItem value="&genre_eq=Biography">Biography</MenuItem>
-              </Select>
-            </FormControl>
-            <Box sx={{ width: 400, m: 2 }}>
-              <Typography>Intervalo de preços</Typography>
-              <Slider
-                value={priceRange}
-                onChange={handlePriceRangeChange}
-                min={0}
-                max={2000}
-              />
-              <Typography>
-                Min: {priceRange[0]}€ | Max: {priceRange[1]}€
-              </Typography>
-            </Box>
-            <Box>
-              <Typography>Nota Mínima</Typography>
-              <Rating value={minRating} onChange={handleMinRatingChange} />
-            </Box>
-          </div>
-          <FormControlLabel control={<Checkbox value={onlyAvailable} onChange={handleOnlyAvailableChange}/>} label="Somente os disponíveis?"/>
-          <br />
-          <Button type="submit" variant="contained">
-            Procurar
-          </Button>
-        </form>
-      </div>
+      <BookSearch
+        search={search}
+        orderBy={orderBy}
+        sortBy={sortBy}
+        genreFilter={genreFilter}
+        priceRange={priceRange}
+        minRating={minRating}
+        onlyAvailable={onlyAvailable}
+        genreList={bookCategories}
+        onFormSubmit={handleFormSubmit}
+        onSearchChange={handleSearchChange}
+        onSortChange={handleSortChange}
+        onOrderChange={handleOrderChange}
+        onGenreFilterChange={handleGenreFilterChange}
+        onPriceRangeChange={handlePriceRangeChange}
+        onMinRatingChange={handleMinRatingChange}
+        onOnlyAvailableChange={handleOnlyAvailableChange}
+      />
       <hr />
-      <BookResults booksList={booksList} page={page} quantityPerPage={quantityPerPage} handleClickPage={handleClickPage}/>
+      <BookResults
+        booksList={booksList}
+        page={page}
+        quantityPerPage={quantityPerPage}
+        handleClickPage={handleClickPage}
+      />
     </>
   );
 }
