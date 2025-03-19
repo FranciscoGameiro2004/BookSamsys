@@ -3,6 +3,7 @@ import {
   useEffect,
   ChangeEventHandler,
   FormEventHandler,
+  SyntheticEvent
 } from "react";
 import "../css/Dashboard.css";
 
@@ -30,6 +31,7 @@ import { TextField } from "@mui/material";
 import { Select, MenuItem, InputLabel } from "@mui/material";
 import { Radio, RadioGroup } from "@mui/material";
 import { NavigateNext, NavigateBefore } from "@mui/icons-material";
+import { Box, Slider, Typography, Rating } from "@mui/material";
 import { Paper } from "@mui/material";
 
 function Dashboard() {
@@ -47,10 +49,9 @@ function Dashboard() {
 
   const [genreFilter, setGenreFilter] = useState("");
 
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(1000);
-  const [priceRange, setPriceRange] = useState(
-    `&price_gte=${minPrice}&price_lte=${maxPrice}`
+  const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [uriPriceRange, setURIPriceRange] = useState(
+    `&price_gte=${priceRange[0]}&price_lte=${priceRange[1]}`
   );
   const [minRating, setMinRating] = useState(1);
   const [onlyAvailable, setOnlyAvailable] = useState(false);
@@ -70,8 +71,8 @@ function Dashboard() {
   }, [orderBy, sortBy]);
 
   useEffect(() => {
-    setPriceRange(`&price_gte=${minPrice}&price_lte=${maxPrice}`);
-  }, [minPrice, maxPrice]);
+    setURIPriceRange(`&price_gte=${priceRange[0]}&price_lte=${priceRange[1]}`);
+  }, [priceRange]);
 
   const fetchBooks = async (): Promise<void> => {
     setLoading(true);
@@ -83,7 +84,7 @@ function Dashboard() {
         `&search=${search}` +
         orderAndSort +
         genreFilter +
-        priceRange +
+        uriPriceRange +
         `&rating_gte=${minRating}` +
         (onlyAvailable ? `&available_eq=${onlyAvailable}` : "")
     )
@@ -117,7 +118,10 @@ function Dashboard() {
     setSortBy(e.target.value);
   };
 
-  const handleOrderChange = (e: ChangeEvent<HTMLInputElement>, input: string) => {
+  const handleOrderChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    input: string
+  ) => {
     setOrderBy(input);
   };
 
@@ -125,15 +129,14 @@ function Dashboard() {
     setGenreFilter(e.target.value);
   };
 
-  const handleMinPriceChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setMinPrice(+e.target.value);
-  };
-  const handleMaxPriceChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setMaxPrice(+e.target.value);
+  const handlePriceRangeChange = (e, newValue: number | number[]) => {
+    setPriceRange(newValue as number[]);
   };
 
-  const handleMinRatingChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setMinRating(+e.target.value);
+  const handleMinRatingChange = (e: SyntheticEvent, newValue: number | null) => {
+    if (typeof newValue === 'number') {
+      setMinRating(newValue);
+    }
   };
 
   const handleOnlyAvailableChange: ChangeEventHandler<
@@ -176,8 +179,16 @@ function Dashboard() {
             <FormControl>
               <FormLabel id="orderByLabel">Por ordem</FormLabel>
               <RadioGroup value={orderBy} onChange={handleOrderChange}>
-                <FormControlLabel value="asc" control={<Radio/>} label="Crescente" />
-                <FormControlLabel value="desc" control={<Radio/>} label="Derescente" />
+                <FormControlLabel
+                  value="asc"
+                  control={<Radio />}
+                  label="Crescente"
+                />
+                <FormControlLabel
+                  value="desc"
+                  control={<Radio />}
+                  label="Derescente"
+                />
               </RadioGroup>
             </FormControl>
           </div>
@@ -220,42 +231,22 @@ function Dashboard() {
                 <MenuItem value="&genre_eq=Biography">Biography</MenuItem>
               </Select>
             </FormControl>
-            <div>
-              <input
-                type="range"
-                name="minPrice"
+            <Box sx={{ width: 400, m: 2 }}>
+              <Typography>Intervalo de preços</Typography>
+              <Slider
+                value={priceRange}
+                onChange={handlePriceRangeChange}
                 min={0}
-                max={maxPrice}
-                value={minPrice}
-                id="minPrice"
-                onChange={handleMinPriceChange}
+                max={2000}
               />
-              <input
-                type="range"
-                name="maxPrice"
-                min={minPrice}
-                max={3000}
-                value={maxPrice}
-                id="maxPrice"
-                onChange={handleMaxPriceChange}
-              />
-              <p>
-                Min: {minPrice}€ | Max: {maxPrice}€
-              </p>
-            </div>
-            <div>
-              <label>Nota Mínima: {minRating}★</label>
-              <br />
-              <input
-                type="range"
-                name="maxPrice"
-                min={1}
-                max={5}
-                value={minRating}
-                id="minRating"
-                onChange={handleMinRatingChange}
-              />
-            </div>
+              <Typography>
+                Min: {priceRange[0]}€ | Max: {priceRange[1]}€
+              </Typography>
+            </Box>
+            <Box>
+              <Typography>Nota Mínima</Typography>
+              <Rating value={minRating} onChange={handleMinRatingChange} />
+            </Box>
           </div>
           <div>
             <label htmlFor="onlyAvailable">Somente os disponíveis? </label>
