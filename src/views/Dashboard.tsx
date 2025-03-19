@@ -10,6 +10,7 @@ import { type Book } from "../types/books";
 
 import { Button, IconButton } from "@mui/material";
 import { TableContainer, Table, TableHead, TableBody, TableRow, TableCell } from "@mui/material";
+import { TextField } from "@mui/material";
 import { NavigateNext, NavigateBefore } from "@mui/icons-material";
 import { Paper } from "@mui/material";
 
@@ -130,11 +131,9 @@ function Dashboard() {
       <h1>Livros</h1>
       <div>
         <form action="#" onSubmit={handleFormSubmit}>
-          <input
-            type="text"
+          <TextField
             value={search}
-            placeholder="Pesquisar"
-            name="search"
+            label="Pesquisar"
             id="search"
             onChange={handleSearchChange}
           />
