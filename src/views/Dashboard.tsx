@@ -30,6 +30,7 @@ import {
 import { TextField } from "@mui/material";
 import { Select, MenuItem, InputLabel } from "@mui/material";
 import { Radio, RadioGroup } from "@mui/material";
+import { Checkbox } from "@mui/material";
 import { NavigateNext, NavigateBefore } from "@mui/icons-material";
 import { Box, Slider, Typography, Rating } from "@mui/material";
 import { Paper } from "@mui/material";
@@ -248,15 +249,7 @@ function Dashboard() {
               <Rating value={minRating} onChange={handleMinRatingChange} />
             </Box>
           </div>
-          <div>
-            <label htmlFor="onlyAvailable">Somente os disponíveis? </label>
-            <input
-              type="checkbox"
-              name="onlyAvailable"
-              id="onlyAvailable"
-              onChange={handleOnlyAvailableChange}
-            />
-          </div>
+          <FormControlLabel control={<Checkbox value={onlyAvailable} onChange={handleOnlyAvailableChange}/>} label="Somente os disponíveis?"/>
           <br />
           <Button type="submit" variant="contained">
             Procurar
