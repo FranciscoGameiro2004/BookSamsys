@@ -6,10 +6,18 @@ import {
 } from "react";
 import "../css/Dashboard.css";
 
+import type { ChangeEvent } from "react";
+
 import { type Book } from "../types/books";
 import { type SelectChangeEvent } from "@mui/material";
 
-import { Button, IconButton, FormControl } from "@mui/material";
+import {
+  Button,
+  IconButton,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+} from "@mui/material";
 import {
   TableContainer,
   Table,
@@ -20,6 +28,7 @@ import {
 } from "@mui/material";
 import { TextField } from "@mui/material";
 import { Select, MenuItem, InputLabel } from "@mui/material";
+import { Radio, RadioGroup } from "@mui/material";
 import { NavigateNext, NavigateBefore } from "@mui/icons-material";
 import { Paper } from "@mui/material";
 
@@ -108,7 +117,7 @@ function Dashboard() {
     setSortBy(e.target.value);
   };
 
-  const handleOrderChange = (input: "asc" | "desc") => {
+  const handleOrderChange = (e: ChangeEvent<HTMLInputElement>, input: string) => {
     setOrderBy(input);
   };
 
@@ -164,73 +173,53 @@ function Dashboard() {
             </FormControl>
           </div>
           <div>
-            <label>Por ordem:</label>
-            <div>
-              <input
-                type="radio"
-                name="orderBy"
-                id="ascRadioBtn"
-                value="asc"
-                onClick={() => handleOrderChange("asc")}
-              />
-              <label htmlFor="ascRadioBtn">Crescente</label>
-              <input
-                type="radio"
-                name="orderBy"
-                id="descRadioBtn"
-                value="desc"
-                onClick={() => handleOrderChange("desc")}
-              />
-              <label htmlFor="descRadioBtn">Derescente</label>
-            </div>
+            <FormControl>
+              <FormLabel id="orderByLabel">Por ordem</FormLabel>
+              <RadioGroup value={orderBy} onChange={handleOrderChange}>
+                <FormControlLabel value="asc" control={<Radio/>} label="Crescente" />
+                <FormControlLabel value="desc" control={<Radio/>} label="Derescente" />
+              </RadioGroup>
+            </FormControl>
           </div>
           <div>
             <label htmlFor="">Filtros</label>
-            {/*Filtrar por
-                [X] Gênero (opt)
-                [X] Preço (min + max)
-                [X] Avaliação (min)
-                [] Disponibilidade (t/f)
-              */}
-            <div>
-              <FormControl sx={{m: 1, minWidth:100}}>
+            <FormControl sx={{ m: 1, minWidth: 100 }}>
               <InputLabel id="genreLabel">Gênero</InputLabel>
-                <Select
-                  labelId="genreLabel"
-                  label="Gênero"
-                  name="genreFilter"
-                  id="genreFilter"
-                  value={genreFilter}
-                  onChange={handleGenreFilterChange}
-                >
-                  <MenuItem value="">Todos</MenuItem>
-                  <MenuItem value="&genre_eq=Fantasy">Fantasy</MenuItem>
-                  <MenuItem value="&genre_eq=Science Fiction">
-                    Science Fiction
-                  </MenuItem>
-                  <MenuItem value="&genre_eq=Comic">Comic</MenuItem>
-                  <MenuItem value="&genre_eq=Poetry">Poetry</MenuItem>
-                  <MenuItem value="&genre_eq=Children's Literature">
-                    Children's Literature
-                  </MenuItem>
-                  <MenuItem value="&genre_eq=Adventure">Adventure</MenuItem>
-                  <MenuItem value="&genre_eq=Psychology">Psychology</MenuItem>
-                  <MenuItem value="&genre_eq=Business">Business</MenuItem>
-                  <MenuItem value="&genre_eq=Classic">Classic</MenuItem>
-                  <MenuItem value="&genre_eq=Romance">Romance</MenuItem>
-                  <MenuItem value="&genre_eq=Comedy">Comedy</MenuItem>
-                  <MenuItem value="&genre_eq=Thriller">Thriller</MenuItem>
-                  <MenuItem value="&genre_eq=Historical Fiction">
-                    Historical Fiction
-                  </MenuItem>
-                  <MenuItem value="&genre_eq=Western">Western</MenuItem>
-                  <MenuItem value="&genre_eq=Religion">Religion</MenuItem>
-                  <MenuItem value="&genre_eq=Mythology">Mythology</MenuItem>
-                  <MenuItem value="&genre_eq=Philosophy">Philosophy</MenuItem>
-                  <MenuItem value="&genre_eq=Biography">Biography</MenuItem>
-                </Select>
-              </FormControl>
-            </div>
+              <Select
+                labelId="genreLabel"
+                label="Gênero"
+                name="genreFilter"
+                id="genreFilter"
+                value={genreFilter}
+                onChange={handleGenreFilterChange}
+              >
+                <MenuItem value="">Todos</MenuItem>
+                <MenuItem value="&genre_eq=Fantasy">Fantasy</MenuItem>
+                <MenuItem value="&genre_eq=Science Fiction">
+                  Science Fiction
+                </MenuItem>
+                <MenuItem value="&genre_eq=Comic">Comic</MenuItem>
+                <MenuItem value="&genre_eq=Poetry">Poetry</MenuItem>
+                <MenuItem value="&genre_eq=Children's Literature">
+                  Children's Literature
+                </MenuItem>
+                <MenuItem value="&genre_eq=Adventure">Adventure</MenuItem>
+                <MenuItem value="&genre_eq=Psychology">Psychology</MenuItem>
+                <MenuItem value="&genre_eq=Business">Business</MenuItem>
+                <MenuItem value="&genre_eq=Classic">Classic</MenuItem>
+                <MenuItem value="&genre_eq=Romance">Romance</MenuItem>
+                <MenuItem value="&genre_eq=Comedy">Comedy</MenuItem>
+                <MenuItem value="&genre_eq=Thriller">Thriller</MenuItem>
+                <MenuItem value="&genre_eq=Historical Fiction">
+                  Historical Fiction
+                </MenuItem>
+                <MenuItem value="&genre_eq=Western">Western</MenuItem>
+                <MenuItem value="&genre_eq=Religion">Religion</MenuItem>
+                <MenuItem value="&genre_eq=Mythology">Mythology</MenuItem>
+                <MenuItem value="&genre_eq=Philosophy">Philosophy</MenuItem>
+                <MenuItem value="&genre_eq=Biography">Biography</MenuItem>
+              </Select>
+            </FormControl>
             <div>
               <input
                 type="range"
