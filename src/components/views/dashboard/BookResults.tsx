@@ -19,6 +19,7 @@ interface BookResultsProps {
   quantityPerPage: number;
   onClickPage: (input: "next" | "previous") => void;
   onClickEditBook: (bookToEdit: Book) => void;
+  onClickDeleteBook: (bookToDelete: Book) => void;
 }
 
 export default function BookResults({
@@ -27,6 +28,7 @@ export default function BookResults({
   quantityPerPage,
   onClickPage,
   onClickEditBook,
+  onClickDeleteBook,
 }: BookResultsProps) {
   return (
     <>
@@ -56,7 +58,7 @@ export default function BookResults({
               <TableRow key={book.uuid}>
                 <TableCell align="center">
                     <IconButton onClick={() => onClickEditBook(book)}><Edit fontSize="small"/></IconButton>
-                    <IconButton><Delete fontSize="small"/></IconButton>
+                    <IconButton onClick={() => onClickDeleteBook(book)}><Delete fontSize="small"/></IconButton>
                 </TableCell>
                 <TableCell>{book.title}</TableCell>
                 <TableCell align="right">{book.author}</TableCell>
