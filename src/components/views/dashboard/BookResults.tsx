@@ -1,4 +1,4 @@
-import './css/bookResults.css'
+import "./css/bookResults.css";
 
 import {
   IconButton,
@@ -10,17 +10,26 @@ import {
   TableCell,
   Paper,
 } from "@mui/material";
-import { NavigateNext, NavigateBefore } from "@mui/icons-material";
+import { NavigateNext, NavigateBefore, Edit, Delete } from "@mui/icons-material";
 import type { Book } from "../../../types/books";
 
 interface BookResultsProps {
-    booksList: Book[],
-    page: number,
-    quantityPerPage: number,
-    handleClickPage: (input: "next" | "previous") => void,
+  booksList: Book[];
+  page: number;
+  quantityPerPage: number;
+  onClickPage: (input: "next" | "previous") => void;
+  onClickEditBook: (bookToEdit: Book) => void;
+  onClickDeleteBook: (bookToDelete: Book) => void;
 }
 
-export default function BookResults({booksList, page, quantityPerPage, handleClickPage}: BookResultsProps) {
+export default function BookResults({
+  booksList,
+  page,
+  quantityPerPage,
+  onClickPage,
+  onClickEditBook,
+  onClickDeleteBook,
+}: BookResultsProps) {
   return (
     <>
       <TableContainer component={Paper}>
@@ -33,6 +42,7 @@ export default function BookResults({booksList, page, quantityPerPage, handleCli
         >
           <TableHead>
             <TableRow>
+              <TableCell align="center">Ações</TableCell>
               <TableCell>Título</TableCell>
               <TableCell align="right">Autor</TableCell>
               <TableCell align="right">Editora</TableCell>
@@ -46,6 +56,10 @@ export default function BookResults({booksList, page, quantityPerPage, handleCli
           <TableBody>
             {booksList.map((book) => (
               <TableRow key={book.uuid}>
+                <TableCell align="center">
+                    <IconButton onClick={() => onClickEditBook(book)}><Edit fontSize="small"/></IconButton>
+                    <IconButton onClick={() => onClickDeleteBook(book)}><Delete fontSize="small"/></IconButton>
+                </TableCell>
                 <TableCell>{book.title}</TableCell>
                 <TableCell align="right">{book.author}</TableCell>
                 <TableCell align="right">{book.publisher}</TableCell>
@@ -61,10 +75,10 @@ export default function BookResults({booksList, page, quantityPerPage, handleCli
           </TableBody>
         </Table>
       </TableContainer>
-      <div className='page-container'>
+      <div className="page-container">
         {page > 1 && (
           <IconButton
-            onClick={() => handleClickPage("previous")}
+            onClick={() => onClickPage("previous")}
             aria-label="anterior"
           >
             <NavigateBefore />
@@ -77,7 +91,7 @@ export default function BookResults({booksList, page, quantityPerPage, handleCli
             Math.floor(100 / quantityPerPage) +
               (100 % quantityPerPage > 0 ? 1 : 0) && (
             <IconButton
-              onClick={() => handleClickPage("next")}
+              onClick={() => onClickPage("next")}
               aria-label="anterior"
             >
               <NavigateNext />

@@ -16,7 +16,6 @@ import {
   Slider,
   Typography,
   Rating,
-  Icon,
 } from "@mui/material";
 import { Search } from "@mui/icons-material";
 
@@ -130,8 +129,8 @@ export default function BookSearch({
               onChange={onGenreFilterChange}
             >
               <MenuItem value="">Todos</MenuItem>
-              {genreList.map((genre) => (
-                <MenuItem value={`&genre_eq=${genre}`}>{genre}</MenuItem>
+              {genreList.map((genre, idx) => (
+                <MenuItem key={idx} value={`&genre_eq=${genre}`}>{genre}</MenuItem>
               ))}
             </Select>
           </FormControl>
