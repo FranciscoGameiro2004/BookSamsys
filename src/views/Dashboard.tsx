@@ -75,16 +75,20 @@ function Dashboard() {
   const [minRating, setMinRating] = useState(1);
   const [onlyAvailable, setOnlyAvailable] = useState(false);
 
-  const [openAddBookModal, setOpenAddBookModal] = useState(false);
+  const [openAddEditBookModal, setOpenAddEditBookModal] = useState(false);
+  const [addEditModalAction, setAddEditModalAction] = useState<"add" | "edit">(
+    "add"
+  );
+  const [editBookInfo, setEditBookInfo] = useState<Book>();
 
-  const [newBookName, setNewBookName] = useState("");
-  const [newBookAuthor, setNewBookAuthor] = useState("");
-  const [newBookGenre, setNewBookGenre] = useState("");
-  const [newBookPublisher, setNewBookPublisher] = useState("");
-  const [newBookISBN, setNewBookISBN] = useState("");
-  const [newBookPrice, setNewBookPrice] = useState("");
-  const [newBookRating, setNewBookRating] = useState(1);
-  const [newBookAvailable, setNewBookAvailable] = useState(false);
+  const [newEditBookName, setNewEditBookName] = useState("");
+  const [newEditBookAuthor, setNewEditBookAuthor] = useState("");
+  const [newEditBookGenre, setNewEditBookGenre] = useState("");
+  const [newEditBookPublisher, setNewEditBookPublisher] = useState("");
+  const [newEditBookISBN, setNewEditBookISBN] = useState("");
+  const [newEditBookPrice, setNewEditBookPrice] = useState("");
+  const [newEditBookRating, setNewEditBookRating] = useState(1);
+  const [newEditBookAvailable, setNewEditBookAvailable] = useState(false);
 
   useEffect(() => {
     fetchBooks();
@@ -103,6 +107,33 @@ function Dashboard() {
   useEffect(() => {
     setURIPriceRange(`&price_gte=${priceRange[0]}&price_lte=${priceRange[1]}`);
   }, [priceRange]);
+
+  useEffect(() => {
+    if (openAddEditBookModal) {
+      if (addEditModalAction === "add") {
+        setNewEditBookISBN("");
+        setNewEditBookName("");
+        setNewEditBookAuthor("");
+        setNewEditBookPublisher("");
+        setNewEditBookGenre("");
+        setNewEditBookPrice("");
+        setNewEditBookRating(0);
+        setNewEditBookAvailable(false);
+      } else if (addEditModalAction === "edit") {
+        if (editBookInfo !== undefined) {
+          console.log(editBookInfo.uuid)
+          setNewEditBookISBN(editBookInfo.isbn);
+          setNewEditBookName(editBookInfo.title);
+          setNewEditBookAuthor(editBookInfo.author);
+          setNewEditBookPublisher(editBookInfo.publisher);
+          setNewEditBookGenre(editBookInfo.genre);
+          setNewEditBookPrice(`${editBookInfo.price}`);
+          setNewEditBookRating(editBookInfo.rating);
+          setNewEditBookAvailable(editBookInfo.available);
+        }
+      }
+    }
+  }, [openAddEditBookModal, addEditModalAction]);
 
   const fetchBooks = async (): Promise<void> => {
     setLoading(true);
@@ -178,72 +209,115 @@ function Dashboard() {
     setOnlyAvailable((previousValue) => !previousValue);
   };
 
-  const handleOpenAddBookModal = () => setOpenAddBookModal(true);
-  const handleCloseAddBookModal = () => setOpenAddBookModal(false);
-
-  const handleNewBookNameChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setNewBookName(e.target.value);
+  const handleOpenAddBookModal = () => {
+    setAddEditModalAction("add");
+    setOpenAddEditBookModal(true);
   };
 
-  const handleNewBookAuthorChange: ChangeEventHandler<HTMLInputElement> = (
+  const handleOpenEditBookModal = (bookToEdit: Book) => {
+    setEditBookInfo(bookToEdit);
+    setAddEditModalAction("edit");
+    setOpenAddEditBookModal(true);    
+  };
+
+  const handleCloseAddBookModal = () => setOpenAddEditBookModal(false);
+
+  const handleNewEditBookNameChange: ChangeEventHandler<HTMLInputElement> = (
     e
   ) => {
-    setNewBookAuthor(e.target.value);
+    setNewEditBookName(e.target.value);
   };
 
-  const handleNewBookGenreChange = (e: SelectChangeEvent<string>) => {
-    setNewBookGenre(e.target.value);
-  };
-
-  const handleNewBookPublisherChange: ChangeEventHandler<HTMLInputElement> = (
+  const handleNewEditBookAuthorChange: ChangeEventHandler<HTMLInputElement> = (
     e
   ) => {
-    setNewBookPublisher(e.target.value);
+    setNewEditBookAuthor(e.target.value);
   };
 
-  const handleNewBookISBNChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setNewBookISBN(e.target.value);
+  const handleNewEditBookGenreChange = (e: SelectChangeEvent<string>) => {
+    setNewEditBookGenre(e.target.value);
   };
 
-  const handleNewBookPriceChange: ChangeEventHandler<HTMLInputElement> = (
+  const handleNewEditBookPublisherChange: ChangeEventHandler<
+    HTMLInputElement
+  > = (e) => {
+    setNewEditBookPublisher(e.target.value);
+  };
+
+  const handleNewEditBookISBNChange: ChangeEventHandler<HTMLInputElement> = (
     e
   ) => {
-    setNewBookPrice(e.target.value);
+    setNewEditBookISBN(e.target.value);
   };
 
-  const handleNewBookRatingChange = (
+  const handleNewEditBookPriceChange: ChangeEventHandler<HTMLInputElement> = (
+    e
+  ) => {
+    setNewEditBookPrice(e.target.value);
+  };
+
+  const handleNewEditBookRatingChange = (
     e: SyntheticEvent<Element, Event>,
     value: number | null
   ) => {
     if (typeof value === "number") {
-      setNewBookRating(value);
+      setNewEditBookRating(value);
     }
   };
 
-  const handleNewBookAvailableChange: ChangeEventHandler<
+  const handleNewEditBookAvailableChange: ChangeEventHandler<
     HTMLInputElement
   > = () => {
     setOnlyAvailable((previousValue) => !previousValue);
   };
 
-  const handleNewBookSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+  const handleAddEditBookSubmit: FormEventHandler<HTMLFormElement> = async (
+    e
+  ) => {
     e.preventDefault();
     try {
-      const response = await fetch(apiURL + "books", {
-        method: "POST",
-        body: JSON.stringify({
-          isbn: newBookISBN,
-          title: newBookName,
-          author: newBookAuthor,
-          publisher: newBookPublisher,
-          genre: newBookPublisher,
-          price: newBookPrice,
-          rating: newBookRating,
-          available: newBookAvailable,
-        }),
-      });
-      setOpenAddBookModal(false);
-      console.log(response);
+      let response: Response;
+      console.log(newEditBookGenre);
+      if (addEditModalAction === "add") {
+        response = await fetch(apiURL + "books", {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json"
+          },
+          body: JSON.stringify({
+            "isbn": newEditBookISBN,
+            "title": newEditBookName,
+            "author": newEditBookAuthor,
+            "publisher": newEditBookPublisher,
+            "genre": newEditBookGenre,
+            "price": +newEditBookPrice,
+            "rating": +newEditBookRating,
+            "available": newEditBookAvailable,
+          }),
+        });
+        console.log(response);
+      } else if (addEditModalAction === "edit") {
+        if (editBookInfo !== undefined) {          
+          const response = await fetch(apiURL + "books/" + editBookInfo.uuid, {
+            method: "PATCH",
+            headers: {
+              "Content-type": "application/json"
+            },
+            body: JSON.stringify({
+              "isbn": newEditBookISBN,
+              "title": newEditBookName,
+              "author": newEditBookAuthor,
+              "publisher": newEditBookPublisher,
+              "genre": newEditBookGenre,
+              "price": +newEditBookPrice,
+              "rating": +newEditBookRating,
+              "available": newEditBookAvailable,
+            }),
+          });
+          console.log(response);
+        }
+      }
+      setOpenAddEditBookModal(false)
     } catch (error) {
       console.error(error);
     }
@@ -290,9 +364,10 @@ function Dashboard() {
         booksList={booksList}
         page={page}
         quantityPerPage={quantityPerPage}
-        handleClickPage={handleClickPage}
+        onClickPage={handleClickPage}
+        onClickEditBook={handleOpenEditBookModal}
       />
-      <Modal open={openAddBookModal} onClose={handleCloseAddBookModal}>
+      <Modal open={openAddEditBookModal} onClose={handleCloseAddBookModal}>
         <Box
           sx={{
             position: "absolute",
@@ -306,23 +381,23 @@ function Dashboard() {
             p: 4,
           }}
         >
-          <Typography id="modal-modal-title" variant="h5" component="h2">
-            Adicionar Livro
+          <Typography id="modal-modal-title" variant="h3" component="h3">
+            {addEditModalAction === "add" ? "Adicionar Livro" : "Editar Livro"}
           </Typography>
-          <form action="#" onSubmit={handleNewBookSubmit}>
+          <form action="#" onSubmit={handleAddEditBookSubmit}>
             <TextField
               required
               label="Título"
               sx={{ width: "100%", m: 1 }}
-              value={newBookName}
-              onChange={handleNewBookNameChange}
+              value={newEditBookName}
+              onChange={handleNewEditBookNameChange}
             ></TextField>
             <TextField
               required
               label="Autor"
               sx={{ width: "100%", m: 1 }}
-              value={newBookAuthor}
-              onChange={handleNewBookAuthorChange}
+              value={newEditBookAuthor}
+              onChange={handleNewEditBookAuthorChange}
             ></TextField>
             <FormControl sx={{ m: 1, width: "100%" }}>
               <InputLabel id="genreLabel">Gênero</InputLabel>
@@ -331,13 +406,13 @@ function Dashboard() {
                 label="Gênero"
                 name="genreFilter"
                 id="genreFilter"
-                value={newBookGenre}
-                onChange={handleNewBookGenreChange}
+                value={newEditBookGenre}
+                onChange={handleNewEditBookGenreChange}
                 required
               >
                 <MenuItem value="">Todos</MenuItem>
                 {bookCategories.map((genre, idx) => (
-                  <MenuItem key={idx} value={`&genre_eq=${genre}`}>
+                  <MenuItem key={idx} value={`${genre}`}>
                     {genre}
                   </MenuItem>
                 ))}
@@ -347,44 +422,42 @@ function Dashboard() {
               required
               label="Editora"
               sx={{ width: "100%", m: 1 }}
-              value={newBookPublisher}
-              onChange={handleNewBookPublisherChange}
+              value={newEditBookPublisher}
+              onChange={handleNewEditBookPublisherChange}
             ></TextField>
             <TextField
               required
               label="ISBN"
               sx={{ width: "100%", m: 1 }}
-              value={newBookISBN}
-              onChange={handleNewBookISBNChange}
+              value={newEditBookISBN}
+              onChange={handleNewEditBookISBNChange}
             ></TextField>
             <TextField
               required
               type="number"
               label="Preço (€)"
               sx={{ width: "100%", m: 1 }}
-              value={newBookPrice}
-              onChange={handleNewBookPriceChange}
+              value={newEditBookPrice}
+              onChange={handleNewEditBookPriceChange}
             ></TextField>
             <Box sx={{ width: "100%", m: 1 }}>
               <Typography>Avaliação</Typography>
               <Rating
-                value={newBookRating}
-                onChange={handleNewBookRatingChange}
+                value={newEditBookRating}
+                onChange={handleNewEditBookRatingChange}
               />
             </Box>
             <FormControlLabel
               sx={{ width: "100%", m: 1 }}
-              control={
-                <Checkbox
-                  value={newBookAvailable}
-                  onChange={handleNewBookAvailableChange}
-                />
-              }
+              value={newEditBookAvailable}
+              control={<Checkbox onChange={handleNewEditBookAvailableChange} />}
               label="Livro em stock?"
             />
             <div>
               <Button variant="contained" type="submit">
-                Adicionar
+                {addEditModalAction === "add"
+                  ? "Adicionar"
+                  : "Aplicar Alterações"}
               </Button>
               <Button variant="outlined">Cancelar</Button>
             </div>
