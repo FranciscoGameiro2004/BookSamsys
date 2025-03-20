@@ -29,8 +29,8 @@ import {
   Rating,
   FormControlLabel,
   Checkbox,
-  Alert,
 } from "@mui/material";
+import { Author } from "../types/authors";
 
 function Dashboard() {
   const apiURL = import.meta.env.VITE_API_BASE_URL;
@@ -57,6 +57,7 @@ function Dashboard() {
   ];
 
   const [booksList, setBooksList] = useState<Book[]>([]);
+  const [authorsList, setAuthorsList] = useState<Author[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [quantityPerPage, setQuantityPerPage] = useState(15);
@@ -94,6 +95,7 @@ function Dashboard() {
 
   useEffect(() => {
     fetchBooks();
+    fetchAuthors();
   }, [page, quantityPerPage]);
 
   useEffect(() => {
@@ -157,6 +159,18 @@ function Dashboard() {
         console.log(json);
       });
     setLoading(false);
+  };
+
+  const fetchAuthors = async (): Promise<void> => {
+    fetch(
+      apiURL +
+        "authors"
+    )
+      .then((res) => res.json())
+      .then((json) => {
+        setAuthorsList(json);
+        console.log(json);
+      });
   };
 
   const handleClickPage = (input: "next" | "previous"): void => {
@@ -385,6 +399,7 @@ function Dashboard() {
       <hr />
       <BookResults
         booksList={booksList}
+        authorsList={authorsList}
         page={page}
         quantityPerPage={quantityPerPage}
         onClickPage={handleClickPage}
@@ -416,6 +431,9 @@ function Dashboard() {
               value={newEditBookName}
               onChange={handleNewEditBookNameChange}
             ></TextField>
+            {
+              // Nota: transformar este Textfield em select!!!!!!!!!!
+            }
             <TextField
               required
               label="Autor"

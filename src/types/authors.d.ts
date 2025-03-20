@@ -1,4 +1,4 @@
 export interface Author {
-    name: string;
+    author: string;
     uuid: string;
 }

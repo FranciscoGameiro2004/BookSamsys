@@ -12,9 +12,11 @@ import {
 } from "@mui/material";
 import { NavigateNext, NavigateBefore, Edit, Delete } from "@mui/icons-material";
 import type { Book } from "../../../types/books";
+import { Author } from "../../../types/authors";
 
 interface BookResultsProps {
   booksList: Book[];
+  authorsList: Author[];
   page: number;
   quantityPerPage: number;
   onClickPage: (input: "next" | "previous") => void;
@@ -24,6 +26,7 @@ interface BookResultsProps {
 
 export default function BookResults({
   booksList,
+  authorsList,
   page,
   quantityPerPage,
   onClickPage,
@@ -61,7 +64,7 @@ export default function BookResults({
                     <IconButton onClick={() => onClickDeleteBook(book)}><Delete fontSize="small"/></IconButton>
                 </TableCell>
                 <TableCell>{book.title}</TableCell>
-                <TableCell align="right">{book.author}</TableCell>
+                <TableCell align="right">{authorsList.find(author => author.uuid === book.authorId)?.author}</TableCell>
                 <TableCell align="right">{book.publisher}</TableCell>
                 <TableCell align="right">{book.genre}</TableCell>
                 <TableCell align="right">{book.isbn}</TableCell>
