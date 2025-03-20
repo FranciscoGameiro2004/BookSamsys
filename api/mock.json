@@ -48,7 +48,7 @@
       "responses": [
         {
           "uuid": "510186b7-2c8a-4ee5-8cf3-47efe4d76e07",
-          "body": "{{setGlobalVar 'jwtToken' \"{{faker 'internet.jwt'}}\" }}\n\n{\n  \"message\": \"Login Successful\",\n  \"token\": \"{{faker 'internet.jwt'}}\",\n}",
+          "body": "{{setGlobalVar 'jwtToken' \"{{faker 'internet.jwt'}}\" }}\n\n{\n  \"message\": \"Login Successful\",\n  \"token\": \"{{faker 'internet.jwt'}}\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -82,7 +82,7 @@
         },
         {
           "uuid": "21079cd6-9d54-45fb-bf71-615d6ba64de1",
-          "body": "{{setGlobalVar 'jwtToken' \"\" }}\n\n{\n  \"message\": \"Login Uncucessful. Check your credentials.\",\n}",
+          "body": "{{setGlobalVar 'jwtToken' \"\" }}\n\n{\n  \"message\": \"Login Uncucessful. Check your credentials.\"\n}",
           "latency": 0,
           "statusCode": 401,
           "label": "",
