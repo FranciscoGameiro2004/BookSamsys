@@ -16,7 +16,6 @@ import {
   Slider,
   Typography,
   Rating,
-  Icon,
 } from "@mui/material";
 import { Search } from "@mui/icons-material";
 

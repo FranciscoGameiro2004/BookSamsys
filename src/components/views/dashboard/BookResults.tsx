@@ -17,14 +17,16 @@ interface BookResultsProps {
   booksList: Book[];
   page: number;
   quantityPerPage: number;
-  handleClickPage: (input: "next" | "previous") => void;
+  onClickPage: (input: "next" | "previous") => void;
+  onClickEditBook: (bookToEdit: Book) => void;
 }
 
 export default function BookResults({
   booksList,
   page,
   quantityPerPage,
-  handleClickPage,
+  onClickPage,
+  onClickEditBook,
 }: BookResultsProps) {
   return (
     <>
@@ -53,7 +55,7 @@ export default function BookResults({
             {booksList.map((book) => (
               <TableRow key={book.uuid}>
                 <TableCell align="center">
-                    <IconButton><Edit fontSize="small"/></IconButton>
+                    <IconButton onClick={() => onClickEditBook(book)}><Edit fontSize="small"/></IconButton>
                     <IconButton><Delete fontSize="small"/></IconButton>
                 </TableCell>
                 <TableCell>{book.title}</TableCell>
@@ -74,7 +76,7 @@ export default function BookResults({
       <div className="page-container">
         {page > 1 && (
           <IconButton
-            onClick={() => handleClickPage("previous")}
+            onClick={() => onClickPage("previous")}
             aria-label="anterior"
           >
             <NavigateBefore />
@@ -87,7 +89,7 @@ export default function BookResults({
             Math.floor(100 / quantityPerPage) +
               (100 % quantityPerPage > 0 ? 1 : 0) && (
             <IconButton
-              onClick={() => handleClickPage("next")}
+              onClick={() => onClickPage("next")}
               aria-label="anterior"
             >
               <NavigateNext />
