@@ -1,7 +1,13 @@
 import { useState, ChangeEventHandler, FormEventHandler } from "react";
 import { Box, Typography, Button, TextField } from "@mui/material";
+import  secureLocalStorage  from  "react-secure-storage";
+import { useNavigate } from "react-router";
 
 export default function LoginPage() {
+  const apiURL = import.meta.env.VITE_API_BASE_URL;
+
+  const navigate = useNavigate()
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -13,43 +19,66 @@ export default function LoginPage() {
     setPassword(e.target.value);
   };
 
-  const handleLoginSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+  const handleLoginSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
+    try {
+      await fetch(apiURL + "login", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          secureLocalStorage.setItem("jwt", json.token);
+        });
+        navigate("/")
+    } catch (error) {
+      console.error(error);
+      secureLocalStorage.setItem("jwt", "");
+    }
   };
 
   return (
     <Box
       sx={{
-        position: "absolute",
-        border: "2px solid #000",
-        minWidth: 400,
-        top: "50%",
-        left: "50%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
         bgcolor: "background.paper",
+        height: "100",
+        width: "100%",
+        border: "2px solid #000",
       }}
     >
-      <form action="#" onSubmit={handleLoginSubmit}>
-        <Typography variant="h4" component="h4">
-          Login
-        </Typography>
-        <Box>
-          <TextField
-            label="Nome de Utilizador"
-            type="username"
-            value={username}
-            onChange={handleUsernameChange}
-          />
-          <TextField
-            label="Palavra-passe"
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-          />
-        </Box>
-        <Button variant="contained" type="submit">
-          Iniciar Sessão
-        </Button>
-      </form>
+      <Box>
+        <form action="#" onSubmit={handleLoginSubmit}>
+          <Typography variant="h4" component="h4">
+            Login
+          </Typography>
+          <Box>
+            <TextField
+              label="Nome de Utilizador"
+              type="username"
+              value={username}
+              onChange={handleUsernameChange}
+            />
+            <TextField
+              label="Palavra-passe"
+              type="password"
+              value={password}
+              onChange={handlePasswordChange}
+            />
+          </Box>
+          <Button variant="contained" type="submit">
+            Iniciar Sessão
+          </Button>
+        </form>
+      </Box>
     </Box>
   );
 }
