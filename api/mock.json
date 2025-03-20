@@ -18,7 +18,7 @@
         {
           "uuid": "ceb2a7f8-69a6-41b0-a9a1-bfbc3ee7cc3b",
           "body": "{}",
-          "latency": 5000,
+          "latency": 0,
           "statusCode": 200,
           "label": "",
           "headers": [],
@@ -38,12 +38,96 @@
       "responseMode": null,
       "streamingMode": null,
       "streamingInterval": 0
+    },
+    {
+      "uuid": "3d807192-8db3-47bf-8a89-838344a9e766",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "login",
+      "responses": [
+        {
+          "uuid": "510186b7-2c8a-4ee5-8cf3-47efe4d76e07",
+          "body": "{{setGlobalVar 'jwtToken' \"{{faker 'internet.jwt'}}\" }}\n\n{\n  \"message\": \"Login Successful\",\n  \"token\": \"{{faker 'internet.jwt'}}\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "username",
+              "value": "admin",
+              "invert": false,
+              "operator": "equals"
+            },
+            {
+              "target": "body",
+              "modifier": "password",
+              "value": "Password1!",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "21079cd6-9d54-45fb-bf71-615d6ba64de1",
+          "body": "{{setGlobalVar 'jwtToken' \"\" }}\n\n{\n  \"message\": \"Login Uncucessful. Check your credentials.\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "username",
+              "value": "admin",
+              "invert": true,
+              "operator": "equals"
+            },
+            {
+              "target": "body",
+              "modifier": "password",
+              "value": "Password1!",
+              "invert": true,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "rootChildren": [
     {
       "type": "route",
       "uuid": "e3f0285b-67d6-4a67-b498-e1c96569e085"
+    },
+    {
+      "type": "route",
+      "uuid": "3d807192-8db3-47bf-8a89-838344a9e766"
     }
   ],
   "proxyMode": false,
