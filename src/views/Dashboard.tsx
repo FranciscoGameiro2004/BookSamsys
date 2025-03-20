@@ -80,6 +80,8 @@ function Dashboard() {
     "add"
   );
   const [editBookInfo, setEditBookInfo] = useState<Book>();
+  const [openDeleteBookModal, setOpenDeleteBookModal] = useState(false);
+  const [delBookInfo, setDelBookInfo] = useState<Book>();
 
   const [newEditBookName, setNewEditBookName] = useState("");
   const [newEditBookAuthor, setNewEditBookAuthor] = useState("");
@@ -220,7 +222,14 @@ function Dashboard() {
     setOpenAddEditBookModal(true);    
   };
 
+  const handleOpenDeleteBookModal = (bookToDel: Book) => {
+    setDelBookInfo(bookToDel);
+    setOpenDeleteBookModal(true);    
+  };
+
   const handleCloseAddBookModal = () => setOpenAddEditBookModal(false);
+
+  const handleCloseDeleteBookModal = () => setOpenDeleteBookModal(false);
 
   const handleNewEditBookNameChange: ChangeEventHandler<HTMLInputElement> = (
     e
@@ -323,6 +332,20 @@ function Dashboard() {
     }
   };
 
+  const handleDeleteBookSubmit: FormEventHandler<HTMLFormElement> = async (
+    e
+  ) => {
+    e.preventDefault();
+    try {
+        await fetch(apiURL + "books/" + delBookInfo?.uuid, {
+          method: "DELETE",
+        });
+      setOpenDeleteBookModal(false)
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="dashboardContainer">
       <div className="addBtnContainer">
@@ -366,6 +389,7 @@ function Dashboard() {
         quantityPerPage={quantityPerPage}
         onClickPage={handleClickPage}
         onClickEditBook={handleOpenEditBookModal}
+        onClickDeleteBook={handleOpenDeleteBookModal}
       />
       <Modal open={openAddEditBookModal} onClose={handleCloseAddBookModal}>
         <Box
@@ -458,6 +482,36 @@ function Dashboard() {
                 {addEditModalAction === "add"
                   ? "Adicionar"
                   : "Aplicar Alterações"}
+              </Button>
+              <Button variant="outlined">Cancelar</Button>
+            </div>
+          </form>
+        </Box>
+      </Modal>
+      <Modal open={openDeleteBookModal} onClose={handleCloseDeleteBookModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography id="modal-modal-title" variant="h5" component="h5">
+            Apagar livro?
+          </Typography>
+          <Typography id="modal-modal-body" component="p">
+            Pretende realmente apagar o livro "{delBookInfo?.title}" de {delBookInfo?.author}?
+          </Typography>
+          <form action="#" onSubmit={handleDeleteBookSubmit}>
+            <div>
+              <Button variant="contained" type="submit">
+                Apagar
               </Button>
               <Button variant="outlined">Cancelar</Button>
             </div>
