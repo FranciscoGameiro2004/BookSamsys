@@ -29,6 +29,8 @@ import {
   Rating,
   FormControlLabel,
   Checkbox,
+  Fab,
+  Zoom
 } from "@mui/material";
 import { Author } from "../types/authors";
 
@@ -357,21 +359,20 @@ function Dashboard() {
 
   return (
     <div className="dashboardContainer">
-      <div className="addBtnContainer">
-        <Button
+      <Box>
+        <Fab
           sx={{
-            width: 60,
-            height: 60,
-            borderRadius: 100,
-            backgroundColor: "red",
-            m: 8,
+            position: 'fixed',
+            bottom: 40,
+            right: 40,
+            color: "white",
+            backgroundColor: 'blueviolet',
           }}
-          variant="contained"
           onClick={handleOpenAddBookModal}
         >
           <Add />
-        </Button>
-      </div>
+        </Fab>
+      </Box>
       <h1>Livros</h1>
       <BookSearch
         search={search}
