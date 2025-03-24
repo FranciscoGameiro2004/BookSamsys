@@ -33,6 +33,9 @@ export default function AuthorsPage() {
   const [openDeleteAuthorModal, setOpenDeleteAuthorModal] = useState(false);
 
   const [addEditAuthor, setAddEditAuthor] = useState("");
+  const [addEditModalAction, setAddEditModalAction] = useState<"add" | "edit">(
+    "add"
+  );
 
   const fetchAuthors = async (): Promise<void> => {
     setLoading(true);
@@ -55,7 +58,14 @@ export default function AuthorsPage() {
   };
 
   const handleOpenAddAuthorModal = () => {
+    setAddEditModalAction("add");
     setAddEditAuthor("");
+    setOpenAddEditAuthorModal(true);
+  };
+
+  const handleOpenEditAuthorModal = (author: Author) => {
+    setAddEditModalAction("edit");
+    setSelectedAuthor(author);
     setOpenAddEditAuthorModal(true);
   };
 
@@ -84,30 +94,54 @@ export default function AuthorsPage() {
     }
   };
 
-  const handleAddAuthorSubmit: FormEventHandler<HTMLFormElement> = async (
+  const handleAddEditAuthorSubmit: FormEventHandler<HTMLFormElement> = async (
     e
   ) => {
     e.preventDefault();
-    try {
-      await fetch(apiURL + "authors", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({
-          author: addEditAuthor
-        }),
-      });
-      setOpenAddEditAuthorModal(false);
-      await fetchAuthors();
-    } catch (error) {
-      console.error(error);
+    if (addEditModalAction === "add") {
+      try {
+        await fetch(apiURL + "authors", {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify({
+            author: addEditAuthor,
+          }),
+        });
+        setOpenAddEditAuthorModal(false);
+        await fetchAuthors();
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      try {
+        await fetch(apiURL + "authors/" + selectedAuthor?.uuid, {
+          method: "PATCH",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify({
+            author: addEditAuthor,
+          }),
+        });
+        setOpenAddEditAuthorModal(false);
+        await fetchAuthors();
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
   useEffect(() => {
     fetchAuthors();
   }, []);
+
+  useEffect(() => {
+    if (selectedAuthor !== undefined) {
+      setAddEditAuthor(selectedAuthor?.author);
+    }
+  }, [selectedAuthor]);
 
   return (
     <>
@@ -139,7 +173,10 @@ export default function AuthorsPage() {
               disableGutters
               secondaryAction={
                 <>
-                  <IconButton aria-label="editar">
+                  <IconButton
+                    onClick={() => handleOpenEditAuthorModal(author)}
+                    aria-label="editar"
+                  >
                     <Edit />
                   </IconButton>
                   <IconButton
@@ -216,10 +253,12 @@ export default function AuthorsPage() {
             value={addEditAuthor}
             onChange={handleAddEditAuthorNameEdit}
           />
-          <form action="#" onSubmit={handleAddAuthorSubmit}>
+          <form action="#" onSubmit={handleAddEditAuthorSubmit}>
             <div>
               <Button variant="contained" type="submit">
-                Adicionar
+                {addEditModalAction === "add"
+                  ? "Adicionar"
+                  : "Confirmar Alterações"}
               </Button>
               <Button variant="outlined">Cancelar</Button>
             </div>
