@@ -9,8 +9,13 @@ import {
   Modal,
   Typography,
   Button,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  RadioGroup,
+  Radio,
 } from "@mui/material";
-import { Edit, Delete, Add } from "@mui/icons-material";
+import { Edit, Delete, Add, RestartAlt } from "@mui/icons-material";
 
 import type { Author } from "../types/authors";
 
@@ -19,6 +24,7 @@ import {
   useState,
   FormEventHandler,
   ChangeEventHandler,
+  ChangeEvent
 } from "react";
 
 export default function AuthorsPage() {
@@ -27,8 +33,11 @@ export default function AuthorsPage() {
   const [authorsList, setAuthorsList] = useState<Author[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const [search, setSearch] = useState("")
-  const [searchQuery, setSearchQuery] = useState("")
+  const [search, setSearch] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const [orderBy, setOrderBy] = useState("");
+  const [orderByQuery, setOrderByQuery] = useState("");
 
   const [selectedAuthor, setSelectedAuthor] = useState<Author>();
 
@@ -42,7 +51,7 @@ export default function AuthorsPage() {
 
   const fetchAuthors = async (): Promise<void> => {
     setLoading(true);
-    await fetch(apiURL + "authors" + searchQuery)
+    await fetch(apiURL + "authors" + searchQuery + orderByQuery)
       .then((res) => res.json())
       .then((json) => {
         setAuthorsList(json);
@@ -137,15 +146,26 @@ export default function AuthorsPage() {
   };
 
   const handleSearchChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setSearch(e.target.value)
+    setSearch(e.target.value);
+  };
+
+  const handleOrderChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    input: string
+  ) => {
+    setOrderBy(input);
+  };
+
+  const handleResetFilterClick = () => {
+    setOrderBy("")
   }
 
   useEffect(() => {
     fetchAuthors();
-  }, [searchQuery]);
+  }, [searchQuery, orderByQuery]);
 
   useEffect(() => {
-    setSearchQuery(`?search=${search}`)
+    setSearchQuery(`?search=${search}`);
   }, [search]);
 
   useEffect(() => {
@@ -153,6 +173,14 @@ export default function AuthorsPage() {
       setAddEditAuthor(selectedAuthor?.author);
     }
   }, [selectedAuthor]);
+
+  useEffect(() => {
+      if (orderBy !== "") {
+        setOrderByQuery(`&order=${orderBy}&sort=author`);
+      } else {
+        setOrderByQuery("");
+      }
+    }, [orderBy]);
 
   return (
     <>
@@ -174,7 +202,28 @@ export default function AuthorsPage() {
       <Box
         sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}
       >
-        <TextField sx={{ width: "100%", maxWidth: 500 }} label="Pesquisa" value={search} onChange={handleSearchChange} />
+        <TextField
+          sx={{ width: "100%", maxWidth: 500 }}
+          label="Pesquisa"
+          value={search}
+          onChange={handleSearchChange}
+        />
+        <FormControl className="orderItem">
+          <FormLabel id="orderByLabel">Por ordem</FormLabel>
+          <RadioGroup value={orderBy} sx={{display: 'flex', flexDirection: 'row'}} onChange={handleOrderChange}>
+            <FormControlLabel
+              value="asc"
+              control={<Radio />}
+              label="Crescente"
+            />
+            <FormControlLabel
+              value="desc"
+              control={<Radio />}
+              label="Derescente"
+            />
+            <Button onClick={handleResetFilterClick}><RestartAlt /></Button>
+          </RadioGroup>
+        </FormControl>
         <List
           sx={{ width: "100%", maxWidth: 500, bgcolor: "background.paper" }}
         >
