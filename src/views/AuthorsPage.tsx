@@ -27,6 +27,9 @@ export default function AuthorsPage() {
   const [authorsList, setAuthorsList] = useState<Author[]>([]);
   const [loading, setLoading] = useState(false);
 
+  const [search, setSearch] = useState("")
+  const [searchQuery, setSearchQuery] = useState("")
+
   const [selectedAuthor, setSelectedAuthor] = useState<Author>();
 
   const [openAddEditAuthorModal, setOpenAddEditAuthorModal] = useState(false);
@@ -39,7 +42,7 @@ export default function AuthorsPage() {
 
   const fetchAuthors = async (): Promise<void> => {
     setLoading(true);
-    await fetch(apiURL + "authors")
+    await fetch(apiURL + "authors" + searchQuery)
       .then((res) => res.json())
       .then((json) => {
         setAuthorsList(json);
@@ -133,9 +136,17 @@ export default function AuthorsPage() {
     }
   };
 
+  const handleSearchChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setSearch(e.target.value)
+  }
+
   useEffect(() => {
     fetchAuthors();
-  }, []);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    setSearchQuery(`?search=${search}`)
+  }, [search]);
 
   useEffect(() => {
     if (selectedAuthor !== undefined) {
@@ -163,7 +174,7 @@ export default function AuthorsPage() {
       <Box
         sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}
       >
-        <TextField sx={{ width: "100%", maxWidth: 500 }} label="Pesquisa" />
+        <TextField sx={{ width: "100%", maxWidth: 500 }} label="Pesquisa" value={search} onChange={handleSearchChange} />
         <List
           sx={{ width: "100%", maxWidth: 500, bgcolor: "background.paper" }}
         >
