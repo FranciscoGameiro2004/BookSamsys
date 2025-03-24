@@ -57,34 +57,37 @@ export default function LoginPage({onLogin = undefined}: LoginPageProps) {
     <Box
       sx={{
         display: "flex",
+        flexDirection: 'column',
         alignItems: "center",
         justifyContent: "center",
         bgcolor: "background.paper",
-        height: "100",
+        height: "100%",
+        maxHeight:900,
         width: "100%",
-        border: "2px solid #000",
       }}
     >
       <Box>
         <form action="#" onSubmit={handleLoginSubmit}>
-          <Typography variant="h4" component="h4">
+          <Typography variant="h4" component="h4" sx={{m: 1}}>
             Login
           </Typography>
-          <Box>
+          <Box sx={{display: 'flex', flexDirection:'column', top: '50%'}}>
             <TextField
+              sx={{m: 1}}
               label="Nome de Utilizador"
               type="username"
               value={username}
               onChange={handleUsernameChange}
             />
             <TextField
+              sx={{m: 1}}
               label="Palavra-passe"
               type="password"
               value={password}
               onChange={handlePasswordChange}
             />
           </Box>
-          <Button variant="contained" type="submit">
+          <Button variant="contained" type="submit" sx={{m: 1}}>
             Iniciar Sessão
           </Button>
         </form>
