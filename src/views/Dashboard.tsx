@@ -128,7 +128,7 @@ function Dashboard() {
           console.log(editBookInfo.uuid)
           setNewEditBookISBN(editBookInfo.isbn);
           setNewEditBookName(editBookInfo.title);
-          setNewEditBookAuthor(editBookInfo.author);
+          setNewEditBookAuthor(editBookInfo.authorId);
           setNewEditBookPublisher(editBookInfo.publisher);
           setNewEditBookGenre(editBookInfo.genre);
           setNewEditBookPrice(`${editBookInfo.price}`);
@@ -310,7 +310,7 @@ function Dashboard() {
           body: JSON.stringify({
             "isbn": newEditBookISBN,
             "title": newEditBookName,
-            "author": newEditBookAuthor,
+            "authorId": newEditBookAuthor,
             "publisher": newEditBookPublisher,
             "genre": newEditBookGenre,
             "price": +newEditBookPrice,
@@ -329,7 +329,7 @@ function Dashboard() {
             body: JSON.stringify({
               "isbn": newEditBookISBN,
               "title": newEditBookName,
-              "author": newEditBookAuthor,
+              "authorId": newEditBookAuthor,
               "publisher": newEditBookPublisher,
               "genre": newEditBookGenre,
               "price": +newEditBookPrice,
@@ -434,13 +434,25 @@ function Dashboard() {
             {
               // Nota: transformar este Textfield em select!!!!!!!!!!
             }
-            <TextField
-              required
-              label="Autor"
-              sx={{ width: "100%", m: 1 }}
-              value={newEditBookAuthor}
-              onChange={handleNewEditBookAuthorChange}
-            ></TextField>
+            <FormControl sx={{ m: 1, width: "100%" }}>
+              <InputLabel id="authorLabel">Autor</InputLabel>
+              <Select
+                labelId="authorLabel"
+                label="Autor"
+                name="authorFilter"
+                id="authorFilter"
+                value={newEditBookAuthor}
+                onChange={handleNewEditBookAuthorChange}
+                required
+              >
+                <MenuItem value="">Nenhum</MenuItem>
+                {authorsList.map((author, idx) => (
+                  <MenuItem key={author.uuid} value={`${author.uuid}`}>
+                    {author.author}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <FormControl sx={{ m: 1, width: "100%" }}>
               <InputLabel id="genreLabel">Gênero</InputLabel>
               <Select
