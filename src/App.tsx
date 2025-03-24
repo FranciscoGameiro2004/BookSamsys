@@ -3,12 +3,14 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 
 import "./css/index.css";
 import LoginPage from "./views/LoginPage.tsx";
+import AuthorsPage from "./views/AuthorsPage.tsx";
 import NavBar from "./components/NavBar.tsx";
 import { Box } from "@mui/material";
 
 import secureLocalStorage from "react-secure-storage";
 
-import DashboardRoute from "./components/DashboardRoute.tsx";
+import Dashboard from "./views/Dashboard.tsx";
+import RestrictedRoute from "./components/RestrictedRoute.tsx";
 
 export default function App() {
   const initialLoginState =
@@ -20,18 +22,18 @@ export default function App() {
 
   const handleLogin = (success: boolean) => {
     setIsLoggedIn(success);
-    alert(success)
-    alert(isLoggedIn)
+    alert(success);
+    alert(isLoggedIn);
   };
 
   const handleLoginClick = () => {
-    window.location.reload()
+    window.location.reload();
     return <Navigate to="/login" replace />;
   };
 
   const handleLogoutClick = () => {
     secureLocalStorage.setItem("jwt", "");
-    window.location.reload()
+    window.location.reload();
     return <Navigate to="/login" replace />;
   };
 
@@ -45,10 +47,25 @@ export default function App() {
       <Box sx={{ marginTop: 10 }}>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<DashboardRoute />} />
+            <Route
+              path="/"
+              element={
+                <RestrictedRoute>
+                  <Dashboard />
+                </RestrictedRoute>
+              }
+            />
             <Route
               path="/login"
               element={<LoginPage onLogin={handleLogin} />}
+            />
+            <Route
+              path="/authors"
+              element={
+                <RestrictedRoute>
+                  <AuthorsPage />
+                </RestrictedRoute>
+              }
             />
           </Routes>
         </BrowserRouter>
