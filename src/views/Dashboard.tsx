@@ -125,7 +125,7 @@ function Dashboard() {
         setNewEditBookAvailable(false);
       } else if (addEditModalAction === "edit") {
         if (editBookInfo !== undefined) {
-          console.log(editBookInfo.uuid)
+          console.log(editBookInfo.uuid);
           setNewEditBookISBN(editBookInfo.isbn);
           setNewEditBookName(editBookInfo.title);
           setNewEditBookAuthor(editBookInfo.authorId);
@@ -162,10 +162,7 @@ function Dashboard() {
   };
 
   const fetchAuthors = async (): Promise<void> => {
-    fetch(
-      apiURL +
-        "authors"
-    )
+    fetch(apiURL + "authors")
       .then((res) => res.json())
       .then((json) => {
         setAuthorsList(json);
@@ -233,12 +230,12 @@ function Dashboard() {
   const handleOpenEditBookModal = (bookToEdit: Book) => {
     setEditBookInfo(bookToEdit);
     setAddEditModalAction("edit");
-    setOpenAddEditBookModal(true);    
+    setOpenAddEditBookModal(true);
   };
 
   const handleOpenDeleteBookModal = (bookToDel: Book) => {
     setDelBookInfo(bookToDel);
-    setOpenDeleteBookModal(true);    
+    setOpenDeleteBookModal(true);
   };
 
   const handleCloseAddBookModal = () => setOpenAddEditBookModal(false);
@@ -251,9 +248,7 @@ function Dashboard() {
     setNewEditBookName(e.target.value);
   };
 
-  const handleNewEditBookAuthorChange: ChangeEventHandler<HTMLInputElement> = (
-    e
-  ) => {
+  const handleNewEditBookAuthorChange = (e: SelectChangeEvent<string>) => {
     setNewEditBookAuthor(e.target.value);
   };
 
@@ -305,42 +300,42 @@ function Dashboard() {
         response = await fetch(apiURL + "books", {
           method: "POST",
           headers: {
-            "Content-type": "application/json"
+            "Content-type": "application/json",
           },
           body: JSON.stringify({
-            "isbn": newEditBookISBN,
-            "title": newEditBookName,
-            "authorId": newEditBookAuthor,
-            "publisher": newEditBookPublisher,
-            "genre": newEditBookGenre,
-            "price": +newEditBookPrice,
-            "rating": +newEditBookRating,
-            "available": newEditBookAvailable,
+            isbn: newEditBookISBN,
+            title: newEditBookName,
+            authorId: newEditBookAuthor,
+            publisher: newEditBookPublisher,
+            genre: newEditBookGenre,
+            price: +newEditBookPrice,
+            rating: +newEditBookRating,
+            available: newEditBookAvailable,
           }),
         });
         console.log(response);
       } else if (addEditModalAction === "edit") {
-        if (editBookInfo !== undefined) {          
+        if (editBookInfo !== undefined) {
           const response = await fetch(apiURL + "books/" + editBookInfo.uuid, {
             method: "PATCH",
             headers: {
-              "Content-type": "application/json"
+              "Content-type": "application/json",
             },
             body: JSON.stringify({
-              "isbn": newEditBookISBN,
-              "title": newEditBookName,
-              "authorId": newEditBookAuthor,
-              "publisher": newEditBookPublisher,
-              "genre": newEditBookGenre,
-              "price": +newEditBookPrice,
-              "rating": +newEditBookRating,
-              "available": newEditBookAvailable,
+              isbn: newEditBookISBN,
+              title: newEditBookName,
+              authorId: newEditBookAuthor,
+              publisher: newEditBookPublisher,
+              genre: newEditBookGenre,
+              price: +newEditBookPrice,
+              rating: +newEditBookRating,
+              available: newEditBookAvailable,
             }),
           });
           console.log(response);
         }
       }
-      setOpenAddEditBookModal(false)
+      setOpenAddEditBookModal(false);
     } catch (error) {
       console.error(error);
     }
@@ -351,10 +346,10 @@ function Dashboard() {
   ) => {
     e.preventDefault();
     try {
-        await fetch(apiURL + "books/" + delBookInfo?.uuid, {
-          method: "DELETE",
-        });
-      setOpenDeleteBookModal(false)
+      await fetch(apiURL + "books/" + delBookInfo?.uuid, {
+        method: "DELETE",
+      });
+      setOpenDeleteBookModal(false);
     } catch (error) {
       console.error(error);
     }
@@ -536,7 +531,8 @@ function Dashboard() {
             Apagar livro?
           </Typography>
           <Typography id="modal-modal-body" component="p">
-            Pretende realmente apagar o livro "{delBookInfo?.title}" de {delBookInfo?.author}?
+            Pretende realmente apagar o livro "{delBookInfo?.title}" de{" "}
+            {delBookInfo?.author}?
           </Typography>
           <form action="#" onSubmit={handleDeleteBookSubmit}>
             <div>
