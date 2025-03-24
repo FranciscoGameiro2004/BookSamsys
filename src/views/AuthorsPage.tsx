@@ -225,7 +225,7 @@ export default function AuthorsPage() {
           </RadioGroup>
         </FormControl>
         <List
-          sx={{ width: "100%", maxWidth: 500, bgcolor: "background.paper" }}
+          sx={{ width: "100%", height:"100%", maxWidth: 500, maxHeight:750, bgcolor: "background.paper", overflowY: 'scroll' }}
         >
           {authorsList.map((author) => (
             <ListItem
