@@ -22,8 +22,6 @@ export default function App() {
 
   const handleLogin = (success: boolean) => {
     setIsLoggedIn(success);
-    alert(success);
-    alert(isLoggedIn);
   };
 
   const handleLoginClick = () => {
@@ -37,12 +35,24 @@ export default function App() {
     return <Navigate to="/login" replace />;
   };
 
+  const handleBooksClick = () => {
+    window.location.href = '/';
+    return <Navigate to="/" />;
+  };
+
+  const handleAuthorsClick = () => {
+    window.location.href = '/authors';
+    return <Navigate to="/authors" />;
+  };
+
   return (
     <>
       <NavBar
         isLoggedIn={isLoggedIn}
         onClickLogin={handleLoginClick}
         onClickLogout={handleLogoutClick}
+        onClickBooks={handleBooksClick}
+        onClickAuthors={handleAuthorsClick}
       />
       <Box sx={{ marginTop: 10 }}>
         <BrowserRouter>

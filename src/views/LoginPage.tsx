@@ -42,14 +42,12 @@ export default function LoginPage({onLogin = undefined}: LoginPageProps) {
         });
         navigate("/")
         if (onLogin) {
-          alert('n')
           onLogin(true)
         }
     } catch (error) {
       console.error(error);
       secureLocalStorage.setItem("jwt", "");
       if (onLogin) {
-        alert('e')
         onLogin(false)
       }
     }

@@ -1,19 +1,34 @@
 import { AppBar, Box, Toolbar, Typography, Button } from "@mui/material";
-import { useState } from "react";
 
 interface NavBarProps {
   isLoggedIn: boolean;
   onClickLogin: () => void;
   onClickLogout: () => void;
+  onClickBooks: () => void;
+  onClickAuthors: () => void;
 }
 
-export default function NavBar({ isLoggedIn, onClickLogin, onClickLogout }: NavBarProps) {
-    const handleClickLogin = () => {
-        onClickLogin()
-    }
-    const handleClickLogout = () => {
-        onClickLogout()
-    }
+export default function NavBar({
+  isLoggedIn,
+  onClickLogin,
+  onClickLogout,
+  onClickBooks,
+  onClickAuthors,
+}: NavBarProps) {
+  const handleClickLogin = () => {
+    onClickLogin();
+  };
+  const handleClickLogout = () => {
+    onClickLogout();
+  };
+
+  const handleClickBooks = () => {
+    onClickBooks();
+  };
+
+  const handleClickAuthors = () => {
+    onClickAuthors();
+  };
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed">
@@ -22,11 +37,32 @@ export default function NavBar({ isLoggedIn, onClickLogin, onClickLogout }: NavB
             BookSamsys
           </Typography>
           {isLoggedIn ? (
-            <Button onClick={handleClickLogout} sx={{ color: "white" }} variant="text">
-              Logout
-            </Button>
+            <>
+              <Button
+                onClick={handleClickBooks}
+                sx={{ color: "white" }}
+                variant="text"
+              >
+                Livros
+              </Button>
+              <Button
+                onClick={handleClickAuthors}
+                sx={{ color: "white" }}
+                variant="text"
+              >
+                Autores
+              </Button>
+              <Button
+                onClick={handleClickLogout}
+                sx={{ color: "white" }}
+                variant="text"
+              >
+                Logout
+              </Button>
+            </>
           ) : (
-            <Button onClick={handleClickLogin}
+            <Button
+              onClick={handleClickLogin}
               sx={{ backgroundColor: "white", color: "blue" }}
               variant="contained"
             >
