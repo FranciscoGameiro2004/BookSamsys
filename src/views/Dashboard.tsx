@@ -141,7 +141,7 @@ function Dashboard() {
 
   const fetchBooks = async (): Promise<void> => {
     setLoading(true);
-    fetch(
+    await fetch(
       apiURL +
         "books" +
         `?page=${page}` +
@@ -397,6 +397,7 @@ function Dashboard() {
         authorsList={authorsList}
         page={page}
         quantityPerPage={quantityPerPage}
+        loading={loading}
         onClickPage={handleClickPage}
         onClickEditBook={handleOpenEditBookModal}
         onClickDeleteBook={handleOpenDeleteBookModal}

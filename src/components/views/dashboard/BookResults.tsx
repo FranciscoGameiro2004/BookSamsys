@@ -9,8 +9,14 @@ import {
   TableRow,
   TableCell,
   Paper,
+  Skeleton,
 } from "@mui/material";
-import { NavigateNext, NavigateBefore, Edit, Delete } from "@mui/icons-material";
+import {
+  NavigateNext,
+  NavigateBefore,
+  Edit,
+  Delete,
+} from "@mui/icons-material";
 import type { Book } from "../../../types/books";
 import { Author } from "../../../types/authors";
 
@@ -19,6 +25,7 @@ interface BookResultsProps {
   authorsList: Author[];
   page: number;
   quantityPerPage: number;
+  loading: boolean;
   onClickPage: (input: "next" | "previous") => void;
   onClickEditBook: (bookToEdit: Book) => void;
   onClickDeleteBook: (bookToDelete: Book) => void;
@@ -29,6 +36,7 @@ export default function BookResults({
   authorsList,
   page,
   quantityPerPage,
+  loading,
   onClickPage,
   onClickEditBook,
   onClickDeleteBook,
@@ -57,24 +65,71 @@ export default function BookResults({
             </TableRow>
           </TableHead>
           <TableBody>
-            {booksList.map((book) => (
-              <TableRow key={book.uuid}>
-                <TableCell align="center">
-                    <IconButton onClick={() => onClickEditBook(book)}><Edit fontSize="small"/></IconButton>
-                    <IconButton onClick={() => onClickDeleteBook(book)}><Delete fontSize="small"/></IconButton>
-                </TableCell>
-                <TableCell>{book.title}</TableCell>
-                <TableCell align="right">{authorsList.find(author => author.uuid === book.authorId)?.author}</TableCell>
-                <TableCell align="right">{book.publisher}</TableCell>
-                <TableCell align="right">{book.genre}</TableCell>
-                <TableCell align="right">{book.isbn}</TableCell>
-                <TableCell align="right">{book.price}€</TableCell>
-                <TableCell align="right">{book.rating}/5</TableCell>
-                <TableCell align="right">
-                  {book.available ? "Em Stock" : "Fora de Stock"}
-                </TableCell>
-              </TableRow>
-            ))}
+            {!loading
+              ? booksList.map((book) => (
+                  <TableRow key={book.uuid}>
+                    <TableCell align="center">
+                      <IconButton onClick={() => onClickEditBook(book)}>
+                        <Edit fontSize="small" />
+                      </IconButton>
+                      <IconButton onClick={() => onClickDeleteBook(book)}>
+                        <Delete fontSize="small" />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell>{book.title}</TableCell>
+                    <TableCell align="right">
+                      {
+                        authorsList.find(
+                          (author) => author.uuid === book.authorId
+                        )?.author
+                      }
+                    </TableCell>
+                    <TableCell align="right">{book.publisher}</TableCell>
+                    <TableCell align="right">{book.genre}</TableCell>
+                    <TableCell align="right">{book.isbn}</TableCell>
+                    <TableCell align="right">{book.price}€</TableCell>
+                    <TableCell align="right">{book.rating}/5</TableCell>
+                    <TableCell align="right">
+                      {book.available ? "Em Stock" : "Fora de Stock"}
+                    </TableCell>
+                  </TableRow>
+                ))
+              : [...Array(quantityPerPage)].map((el, idx) => (
+                  <TableRow key={idx}>
+                    <TableCell align="center">
+                      <IconButton disabled>
+                        <Edit fontSize="small" />
+                      </IconButton>
+                      <IconButton disabled>
+                        <Delete fontSize="small" />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell align="right">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell align="right">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell align="right">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell align="right">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell align="right">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell align="right">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell align="right">
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -83,6 +138,7 @@ export default function BookResults({
           <IconButton
             onClick={() => onClickPage("previous")}
             aria-label="anterior"
+            disabled={loading}
           >
             <NavigateBefore />
           </IconButton>
@@ -96,6 +152,7 @@ export default function BookResults({
             <IconButton
               onClick={() => onClickPage("next")}
               aria-label="anterior"
+              disabled={loading}
             >
               <NavigateNext />
             </IconButton>
