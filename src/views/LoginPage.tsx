@@ -3,7 +3,11 @@ import { Box, Typography, Button, TextField } from "@mui/material";
 import  secureLocalStorage  from  "react-secure-storage";
 import { useNavigate } from "react-router";
 
-export default function LoginPage() {
+interface LoginPageProps {
+  onLogin?: (success: boolean) => void
+}
+
+export default function LoginPage({onLogin = undefined}: LoginPageProps) {
   const apiURL = import.meta.env.VITE_API_BASE_URL;
 
   const navigate = useNavigate()
@@ -37,9 +41,17 @@ export default function LoginPage() {
           secureLocalStorage.setItem("jwt", json.token);
         });
         navigate("/")
+        if (onLogin) {
+          alert('n')
+          onLogin(true)
+        }
     } catch (error) {
       console.error(error);
       secureLocalStorage.setItem("jwt", "");
+      if (onLogin) {
+        alert('e')
+        onLogin(false)
+      }
     }
   };
 
