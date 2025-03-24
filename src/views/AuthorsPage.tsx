@@ -14,6 +14,7 @@ import {
   FormLabel,
   RadioGroup,
   Radio,
+  Skeleton,
 } from "@mui/material";
 import { Edit, Delete, Add, RestartAlt } from "@mui/icons-material";
 
@@ -227,7 +228,7 @@ export default function AuthorsPage() {
         <List
           sx={{ width: "100%", height:"100%", maxWidth: 500, maxHeight:750, bgcolor: "background.paper", overflowY: 'scroll' }}
         >
-          {authorsList.map((author) => (
+          {!loading ? authorsList.map((author) => (
             <ListItem
               key={author.uuid}
               disableGutters
@@ -249,6 +250,23 @@ export default function AuthorsPage() {
               }
             >
               <ListItemText primary={author.author} />
+            </ListItem>
+          )) : [...Array(15)].map((el, idx) => (
+            <ListItem
+              key={idx}
+              disableGutters
+              secondaryAction={
+                <>
+                  <IconButton disabled>
+                    <Edit />
+                  </IconButton>
+                  <IconButton disabled>
+                    <Delete />
+                  </IconButton>
+                </>
+              }
+            >
+              <ListItemText primary={<Skeleton width={'90%'}/>} />
             </ListItem>
           ))}
         </List>
