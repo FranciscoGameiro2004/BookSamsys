@@ -286,7 +286,7 @@ function Dashboard() {
   const handleNewEditBookAvailableChange: ChangeEventHandler<
     HTMLInputElement
   > = () => {
-    setOnlyAvailable((previousValue) => !previousValue);
+    setNewEditBookAvailable((previousValue) => !previousValue);
   };
 
   const handleAddEditBookSubmit: FormEventHandler<HTMLFormElement> = async (
@@ -500,7 +500,7 @@ function Dashboard() {
             <FormControlLabel
               sx={{ width: "100%", m: 1 }}
               value={newEditBookAvailable}
-              control={<Checkbox onChange={handleNewEditBookAvailableChange} />}
+              control={<Checkbox checked={newEditBookAvailable} onChange={handleNewEditBookAvailableChange} />}
               label="Livro em stock?"
             />
             <div>

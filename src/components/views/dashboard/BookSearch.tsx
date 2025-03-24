@@ -151,10 +151,10 @@ export default function BookSearch({
             <Rating value={minRating} onChange={onMinRatingChange} />
           </Box>
 
-          <FormControlLabel
+          <FormControlLabel value={onlyAvailable}
             control={
               <Checkbox
-                value={onlyAvailable}
+                checked={onlyAvailable}
                 onChange={onOnlyAvailableChange}
               />
             }
