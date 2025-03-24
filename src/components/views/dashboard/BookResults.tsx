@@ -10,12 +10,15 @@ import {
   TableCell,
   Paper,
   Skeleton,
+  Box,
+  Typography,
 } from "@mui/material";
 import {
   NavigateNext,
   NavigateBefore,
   Edit,
   Delete,
+  SearchOff
 } from "@mui/icons-material";
 import type { Book } from "../../../types/books";
 import { Author } from "../../../types/authors";
@@ -31,6 +34,18 @@ interface BookResultsProps {
   onClickDeleteBook: (bookToDelete: Book) => void;
 }
 
+function EmptyState() {
+  return (
+    <Box sx={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
+      <SearchOff sx={{width:200, height: 200}}/>
+      <Box sx={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
+      <Typography variant="h6" component="p">Não exitem livros dísponíveis.</Typography>
+      <Typography component="p">Procure alterar os filtros.</Typography>
+      </Box>
+    </Box>
+  );
+}
+
 export default function BookResults({
   booksList,
   authorsList,
@@ -41,7 +56,7 @@ export default function BookResults({
   onClickEditBook,
   onClickDeleteBook,
 }: BookResultsProps) {
-  return (
+  return booksList.length > 0 || loading ? (
     <>
       <TableContainer component={Paper}>
         <Table
@@ -159,6 +174,10 @@ export default function BookResults({
           )
         }
       </div>
+    </>
+  ) : (
+    <>
+      <EmptyState />
     </>
   );
 }
