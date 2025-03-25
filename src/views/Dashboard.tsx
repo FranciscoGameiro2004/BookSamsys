@@ -29,8 +29,9 @@ import {
   Rating,
   FormControlLabel,
   Checkbox,
-  Alert,
+  Fab,
 } from "@mui/material";
+import { Author } from "../types/authors";
 
 function Dashboard() {
   const apiURL = import.meta.env.VITE_API_BASE_URL;
@@ -57,6 +58,7 @@ function Dashboard() {
   ];
 
   const [booksList, setBooksList] = useState<Book[]>([]);
+  const [authorsList, setAuthorsList] = useState<Author[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [quantityPerPage, setQuantityPerPage] = useState(15);
@@ -94,6 +96,7 @@ function Dashboard() {
 
   useEffect(() => {
     fetchBooks();
+    fetchAuthors();
   }, [page, quantityPerPage]);
 
   useEffect(() => {
@@ -123,10 +126,10 @@ function Dashboard() {
         setNewEditBookAvailable(false);
       } else if (addEditModalAction === "edit") {
         if (editBookInfo !== undefined) {
-          console.log(editBookInfo.uuid)
+          console.log(editBookInfo.uuid);
           setNewEditBookISBN(editBookInfo.isbn);
           setNewEditBookName(editBookInfo.title);
-          setNewEditBookAuthor(editBookInfo.author);
+          setNewEditBookAuthor(editBookInfo.authorId);
           setNewEditBookPublisher(editBookInfo.publisher);
           setNewEditBookGenre(editBookInfo.genre);
           setNewEditBookPrice(`${editBookInfo.price}`);
@@ -139,7 +142,7 @@ function Dashboard() {
 
   const fetchBooks = async (): Promise<void> => {
     setLoading(true);
-    fetch(
+    await fetch(
       apiURL +
         "books" +
         `?page=${page}` +
@@ -157,6 +160,15 @@ function Dashboard() {
         console.log(json);
       });
     setLoading(false);
+  };
+
+  const fetchAuthors = async (): Promise<void> => {
+    fetch(apiURL + "authors")
+      .then((res) => res.json())
+      .then((json) => {
+        setAuthorsList(json);
+        console.log(json);
+      });
   };
 
   const handleClickPage = (input: "next" | "previous"): void => {
@@ -211,6 +223,33 @@ function Dashboard() {
     setOnlyAvailable((previousValue) => !previousValue);
   };
 
+  const handleResetFiltersClick = () => {
+    setSearch("");
+    setOrderBy("");
+    setSortBy("");
+    setGenreFilter("");
+    setPriceRange([0, 1000]);
+    setMinRating(1);
+    setOnlyAvailable(false);
+  };
+
+  
+  const handleRemoveGenreFilterClick = () => {
+    setGenreFilter("");
+  };
+
+const handleRemoveOnlyAvailableFilterClick = () => {
+    setOnlyAvailable(false);
+  };
+  const handleResetMinRatingFilterClick = () => {
+    setMinRating(1);
+  };
+
+  const handleResetPriceRangeFilterClick = () => {
+    setPriceRange([0, 1000]);
+  };
+
+
   const handleOpenAddBookModal = () => {
     setAddEditModalAction("add");
     setOpenAddEditBookModal(true);
@@ -219,15 +258,15 @@ function Dashboard() {
   const handleOpenEditBookModal = (bookToEdit: Book) => {
     setEditBookInfo(bookToEdit);
     setAddEditModalAction("edit");
-    setOpenAddEditBookModal(true);    
+    setOpenAddEditBookModal(true);
   };
 
   const handleOpenDeleteBookModal = (bookToDel: Book) => {
     setDelBookInfo(bookToDel);
-    setOpenDeleteBookModal(true);    
+    setOpenDeleteBookModal(true);
   };
 
-  const handleCloseAddBookModal = () => setOpenAddEditBookModal(false);
+  const handleCloseAddEditBookModal = () => setOpenAddEditBookModal(false);
 
   const handleCloseDeleteBookModal = () => setOpenDeleteBookModal(false);
 
@@ -237,9 +276,7 @@ function Dashboard() {
     setNewEditBookName(e.target.value);
   };
 
-  const handleNewEditBookAuthorChange: ChangeEventHandler<HTMLInputElement> = (
-    e
-  ) => {
+  const handleNewEditBookAuthorChange = (e: SelectChangeEvent<string>) => {
     setNewEditBookAuthor(e.target.value);
   };
 
@@ -277,7 +314,7 @@ function Dashboard() {
   const handleNewEditBookAvailableChange: ChangeEventHandler<
     HTMLInputElement
   > = () => {
-    setOnlyAvailable((previousValue) => !previousValue);
+    setNewEditBookAvailable((previousValue) => !previousValue);
   };
 
   const handleAddEditBookSubmit: FormEventHandler<HTMLFormElement> = async (
@@ -291,42 +328,42 @@ function Dashboard() {
         response = await fetch(apiURL + "books", {
           method: "POST",
           headers: {
-            "Content-type": "application/json"
+            "Content-type": "application/json",
           },
           body: JSON.stringify({
-            "isbn": newEditBookISBN,
-            "title": newEditBookName,
-            "author": newEditBookAuthor,
-            "publisher": newEditBookPublisher,
-            "genre": newEditBookGenre,
-            "price": +newEditBookPrice,
-            "rating": +newEditBookRating,
-            "available": newEditBookAvailable,
+            isbn: newEditBookISBN,
+            title: newEditBookName,
+            authorId: newEditBookAuthor,
+            publisher: newEditBookPublisher,
+            genre: newEditBookGenre,
+            price: +newEditBookPrice,
+            rating: +newEditBookRating,
+            available: newEditBookAvailable,
           }),
         });
         console.log(response);
       } else if (addEditModalAction === "edit") {
-        if (editBookInfo !== undefined) {          
+        if (editBookInfo !== undefined) {
           const response = await fetch(apiURL + "books/" + editBookInfo.uuid, {
             method: "PATCH",
             headers: {
-              "Content-type": "application/json"
+              "Content-type": "application/json",
             },
             body: JSON.stringify({
-              "isbn": newEditBookISBN,
-              "title": newEditBookName,
-              "author": newEditBookAuthor,
-              "publisher": newEditBookPublisher,
-              "genre": newEditBookGenre,
-              "price": +newEditBookPrice,
-              "rating": +newEditBookRating,
-              "available": newEditBookAvailable,
+              isbn: newEditBookISBN,
+              title: newEditBookName,
+              authorId: newEditBookAuthor,
+              publisher: newEditBookPublisher,
+              genre: newEditBookGenre,
+              price: +newEditBookPrice,
+              rating: +newEditBookRating,
+              available: newEditBookAvailable,
             }),
           });
           console.log(response);
         }
       }
-      setOpenAddEditBookModal(false)
+      setOpenAddEditBookModal(false);
     } catch (error) {
       console.error(error);
     }
@@ -337,10 +374,10 @@ function Dashboard() {
   ) => {
     e.preventDefault();
     try {
-        await fetch(apiURL + "books/" + delBookInfo?.uuid, {
-          method: "DELETE",
-        });
-      setOpenDeleteBookModal(false)
+      await fetch(apiURL + "books/" + delBookInfo?.uuid, {
+        method: "DELETE",
+      });
+      setOpenDeleteBookModal(false);
     } catch (error) {
       console.error(error);
     }
@@ -348,21 +385,20 @@ function Dashboard() {
 
   return (
     <div className="dashboardContainer">
-      <div className="addBtnContainer">
-        <Button
+      <Box>
+        <Fab
           sx={{
-            width: 60,
-            height: 60,
-            borderRadius: 100,
-            backgroundColor: "red",
-            m: 8,
+            position: "fixed",
+            bottom: 40,
+            right: 40,
+            color: "white",
+            backgroundColor: "blueviolet",
           }}
-          variant="contained"
           onClick={handleOpenAddBookModal}
         >
           <Add />
-        </Button>
-      </div>
+        </Fab>
+      </Box>
       <h1>Livros</h1>
       <BookSearch
         search={search}
@@ -381,17 +417,24 @@ function Dashboard() {
         onPriceRangeChange={handlePriceRangeChange}
         onMinRatingChange={handleMinRatingChange}
         onOnlyAvailableChange={handleOnlyAvailableChange}
+        onResetFiltersClick={handleResetFiltersClick}
+        onRemoveGenreFilterClick={handleRemoveGenreFilterClick}
+        onRemoveOnlyAvailableFilterClick={handleRemoveOnlyAvailableFilterClick}
+        onResetMinRatingFilterClick={handleResetMinRatingFilterClick}
+        onResetPriceRangeFilterClick={handleResetPriceRangeFilterClick}
       />
       <hr />
       <BookResults
         booksList={booksList}
+        authorsList={authorsList}
         page={page}
         quantityPerPage={quantityPerPage}
+        loading={loading}
         onClickPage={handleClickPage}
         onClickEditBook={handleOpenEditBookModal}
         onClickDeleteBook={handleOpenDeleteBookModal}
       />
-      <Modal open={openAddEditBookModal} onClose={handleCloseAddBookModal}>
+      <Modal open={openAddEditBookModal} onClose={handleCloseAddEditBookModal}>
         <Box
           sx={{
             position: "absolute",
@@ -416,13 +459,28 @@ function Dashboard() {
               value={newEditBookName}
               onChange={handleNewEditBookNameChange}
             ></TextField>
-            <TextField
-              required
-              label="Autor"
-              sx={{ width: "100%", m: 1 }}
-              value={newEditBookAuthor}
-              onChange={handleNewEditBookAuthorChange}
-            ></TextField>
+            {
+              // Nota: transformar este Textfield em select!!!!!!!!!!
+            }
+            <FormControl sx={{ m: 1, width: "100%" }}>
+              <InputLabel id="authorLabel">Autor</InputLabel>
+              <Select
+                labelId="authorLabel"
+                label="Autor"
+                name="authorFilter"
+                id="authorFilter"
+                value={newEditBookAuthor}
+                onChange={handleNewEditBookAuthorChange}
+                required
+              >
+                <MenuItem value="">Nenhum</MenuItem>
+                {authorsList.map((author) => (
+                  <MenuItem key={author.uuid} value={`${author.uuid}`}>
+                    {author.author}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <FormControl sx={{ m: 1, width: "100%" }}>
               <InputLabel id="genreLabel">Gênero</InputLabel>
               <Select
@@ -474,17 +532,24 @@ function Dashboard() {
             <FormControlLabel
               sx={{ width: "100%", m: 1 }}
               value={newEditBookAvailable}
-              control={<Checkbox onChange={handleNewEditBookAvailableChange} />}
+              control={
+                <Checkbox
+                  checked={newEditBookAvailable}
+                  onChange={handleNewEditBookAvailableChange}
+                />
+              }
               label="Livro em stock?"
             />
-            <div>
+            <Box sx={{ display: "flex", justifyContent: "space-around", m: 3 }}>
               <Button variant="contained" type="submit">
                 {addEditModalAction === "add"
                   ? "Adicionar"
                   : "Aplicar Alterações"}
               </Button>
-              <Button variant="outlined">Cancelar</Button>
-            </div>
+              <Button variant="outlined" onClick={handleCloseAddEditBookModal}>
+                Cancelar
+              </Button>
+            </Box>
           </form>
         </Box>
       </Modal>
@@ -506,15 +571,18 @@ function Dashboard() {
             Apagar livro?
           </Typography>
           <Typography id="modal-modal-body" component="p">
-            Pretende realmente apagar o livro "{delBookInfo?.title}" de {delBookInfo?.author}?
+            Pretende realmente apagar o livro "{delBookInfo?.title}" de{" "}
+            {delBookInfo?.author}?
           </Typography>
           <form action="#" onSubmit={handleDeleteBookSubmit}>
-            <div>
+            <Box sx={{ display: "flex", justifyContent: "space-around", m: 3 }}>
               <Button variant="contained" type="submit">
                 Apagar
               </Button>
-              <Button variant="outlined">Cancelar</Button>
-            </div>
+              <Button variant="outlined" onClick={handleCloseDeleteBookModal}>
+                Cancelar
+              </Button>
+            </Box>
           </form>
         </Box>
       </Modal>
