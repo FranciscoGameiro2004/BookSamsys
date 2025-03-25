@@ -70,16 +70,15 @@ export default function BookSearch({
   onOnlyAvailableChange,
   onResetFilterClick,
 }: BookSearchProps) {
-
-  const [openFilters, setOpenFilters] = useState((false))
+  const [openFilters, setOpenFilters] = useState(false);
 
   const handleOpenFiltersClick = () => {
-    setOpenFilters(true)
-  }
+    setOpenFilters(true);
+  };
 
   const handleCloseFiltersClick = () => {
-    setOpenFilters(false)
-  }
+    setOpenFilters(false);
+  };
 
   return (
     <div>
@@ -135,64 +134,81 @@ export default function BookSearch({
               </RadioGroup>
             </FormControl>
             <Button onClick={handleOpenFiltersClick}>
-            <Tune />
+              <Tune />
             </Button>
           </div>
         </div>
-        
-        <Drawer open={openFilters} onClose={handleCloseFiltersClick}>
-          <Box sx={{ maxWidth: 350 }}>
-          <div className="filtersContainer">
-          <FormControl sx={{ m: 1, minWidth: 100 }}>
-            <InputLabel id="genreLabel">Gênero</InputLabel>
-            <Select
-              labelId="genreLabel"
-              label="Gênero"
-              name="genreFilter"
-              id="genreFilter"
-              value={genreFilter}
-              onChange={onGenreFilterChange}
-            >
-              <MenuItem value="">Todos</MenuItem>
-              {genreList.map((genre, idx) => (
-                <MenuItem key={idx} value={`&genre_eq=${genre}`}>
-                  {genre}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <Box sx={{ width: 400, m: 2 }}>
-            <Typography>Intervalo de preços</Typography>
-            <Slider
-              value={priceRange}
-              onChange={onPriceRangeChange}
-              min={0}
-              max={2000}
-            />
-            <Typography>
-              Min: {priceRange[0]}€ | Max: {priceRange[1]}€
-            </Typography>
-          </Box>
-          <Box>
-            <Typography>Nota Mínima</Typography>
-            <Rating value={minRating} onChange={onMinRatingChange} />
-          </Box>
 
-          <FormControlLabel
-            value={onlyAvailable}
-            control={
-              <Checkbox
-                checked={onlyAvailable}
-                onChange={onOnlyAvailableChange}
+        <Drawer open={openFilters} onClose={handleCloseFiltersClick}>
+          <Typography component="h3" variant="h3" sx={{ m: 3 }}>
+            Filtros
+          </Typography>
+          <Box
+            sx={{
+              height: "100%",
+              maxWidth: 250,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              p: 5,
+            }}
+          >
+            <FormControl sx={{ m: 3, minWidth: 300 }}>
+              <InputLabel id="genreLabel">Gênero</InputLabel>
+              <Select
+                labelId="genreLabel"
+                label="Gênero"
+                name="genreFilter"
+                id="genreFilter"
+                value={genreFilter}
+                onChange={onGenreFilterChange}
+              >
+                <MenuItem value="">Todos</MenuItem>
+                {genreList.map((genre, idx) => (
+                  <MenuItem key={idx} value={`&genre_eq=${genre}`}>
+                    {genre}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Box sx={{ minWidth: 300, m: 3 }}>
+              <Typography>Intervalo de preços</Typography>
+              <Slider
+                value={priceRange}
+                onChange={onPriceRangeChange}
+                min={0}
+                max={2000}
               />
-            }
-            label="Mostrar somente livros disponíveis?"
-          />
-          <Button onClick={onResetFilterClick}>
-            <RestartAlt />
-          </Button>
-          <br />
-        </div>
+              <Typography>
+                Min: {priceRange[0]}€ | Max: {priceRange[1]}€
+              </Typography>
+            </Box>
+            <Box sx={{ m: 3 }}>
+              <Typography>Nota Mínima</Typography>
+              <Rating value={minRating} onChange={onMinRatingChange} />
+            </Box>
+
+            <FormControlLabel
+              value={onlyAvailable}
+              sx={{ minWidth: 300, m: 3 }}
+              control={
+                <Checkbox
+                  checked={onlyAvailable}
+                  onChange={onOnlyAvailableChange}
+                />
+              }
+              label="Mostrar somente livros disponíveis?"
+            />
+            <Button
+              onClick={onResetFilterClick}
+              sx={{ minWidth: 300, m: 3 }}
+              variant="contained"
+            >
+              <RestartAlt />
+              Repor Filtros
+            </Button>
+            <br />
           </Box>
         </Drawer>
       </form>
