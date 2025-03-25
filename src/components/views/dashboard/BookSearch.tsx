@@ -17,7 +17,7 @@ import {
   Typography,
   Rating,
 } from "@mui/material";
-import { Search } from "@mui/icons-material";
+import { Search, RestartAlt } from "@mui/icons-material";
 
 import {
   ChangeEventHandler,
@@ -46,6 +46,7 @@ interface BookSearchProps {
   onPriceRangeChange: (e: Event, newValue: number | number[]) => void;
   onMinRatingChange: (e: SyntheticEvent, newValue: number | null) => void;
   onOnlyAvailableChange: ChangeEventHandler<HTMLInputElement>;
+  onResetFilterClick: () => void
 }
 
 export default function BookSearch({
@@ -65,6 +66,7 @@ export default function BookSearch({
   onPriceRangeChange,
   onMinRatingChange,
   onOnlyAvailableChange,
+  onResetFilterClick,
 }: BookSearchProps) {
   return (
     <div>
@@ -160,6 +162,9 @@ export default function BookSearch({
             }
             label="Mostrar somente livros disponíveis?"
           />
+          <Button onClick={onResetFilterClick}>
+              <RestartAlt />
+            </Button>
           <br />
         </div>
       </form>

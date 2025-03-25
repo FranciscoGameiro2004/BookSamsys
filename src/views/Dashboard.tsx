@@ -223,6 +223,18 @@ function Dashboard() {
     setOnlyAvailable((previousValue) => !previousValue);
   };
 
+  const handleResetFilterClick = () => {
+    setSearch("")
+    setOrderBy("")
+    setSortBy("")
+    setGenreFilter("")
+    setPriceRange([0,1000])
+    setMinRating(1)
+    setOnlyAvailable(false
+      
+    )
+  }
+
   const handleOpenAddBookModal = () => {
     setAddEditModalAction("add");
     setOpenAddEditBookModal(true);
@@ -390,6 +402,7 @@ function Dashboard() {
         onPriceRangeChange={handlePriceRangeChange}
         onMinRatingChange={handleMinRatingChange}
         onOnlyAvailableChange={handleOnlyAvailableChange}
+        onResetFilterClick={handleResetFilterClick}
       />
       <hr />
       <BookResults
