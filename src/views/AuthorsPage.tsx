@@ -16,7 +16,7 @@ import {
   Radio,
   Skeleton,
 } from "@mui/material";
-import { Edit, Delete, Add, RestartAlt } from "@mui/icons-material";
+import { Edit, Delete, Add, RestartAlt, PersonOff } from "@mui/icons-material";
 
 import type { Author } from "../types/authors";
 
@@ -25,8 +25,26 @@ import {
   useState,
   FormEventHandler,
   ChangeEventHandler,
-  ChangeEvent
+  ChangeEvent,
 } from "react";
+
+function EmptyState() {
+  return (
+    <Box
+      sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}
+    >
+      <PersonOff sx={{ width: 250, height: 250 }} />
+      <Box
+        sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}
+      >
+        <Typography variant="h6" component="p">
+          Não foram encontrados autores.
+        </Typography>
+        <Typography component="p">Procure criá-lo.</Typography>
+      </Box>
+    </Box>
+  );
+}
 
 export default function AuthorsPage() {
   const apiURL = import.meta.env.VITE_API_BASE_URL;
@@ -158,8 +176,8 @@ export default function AuthorsPage() {
   };
 
   const handleResetFilterClick = () => {
-    setOrderBy("")
-  }
+    setOrderBy("");
+  };
 
   useEffect(() => {
     fetchAuthors();
@@ -176,12 +194,12 @@ export default function AuthorsPage() {
   }, [selectedAuthor]);
 
   useEffect(() => {
-      if (orderBy !== "") {
-        setOrderByQuery(`&order=${orderBy}&sort=author`);
-      } else {
-        setOrderByQuery("");
-      }
-    }, [orderBy]);
+    if (orderBy !== "") {
+      setOrderByQuery(`&order=${orderBy}&sort=author`);
+    } else {
+      setOrderByQuery("");
+    }
+  }, [orderBy]);
 
   return (
     <>
@@ -211,7 +229,11 @@ export default function AuthorsPage() {
         />
         <FormControl className="orderItem">
           <FormLabel id="orderByLabel">Por ordem</FormLabel>
-          <RadioGroup value={orderBy} sx={{display: 'flex', flexDirection: 'row'}} onChange={handleOrderChange}>
+          <RadioGroup
+            value={orderBy}
+            sx={{ display: "flex", flexDirection: "row" }}
+            onChange={handleOrderChange}
+          >
             <FormControlLabel
               value="asc"
               control={<Radio />}
@@ -222,54 +244,69 @@ export default function AuthorsPage() {
               control={<Radio />}
               label="Derescente"
             />
-            <Button onClick={handleResetFilterClick}><RestartAlt /></Button>
+            <Button onClick={handleResetFilterClick}>
+              <RestartAlt />
+            </Button>
           </RadioGroup>
         </FormControl>
-        <List
-          sx={{ width: "100%", height:"100%", maxWidth: 500, maxHeight:750, bgcolor: "background.paper", overflowY: 'scroll' }}
-        >
-          {!loading ? authorsList.map((author) => (
-            <ListItem
-              key={author.uuid}
-              disableGutters
-              secondaryAction={
-                <>
-                  <IconButton
-                    onClick={() => handleOpenEditAuthorModal(author)}
-                    aria-label="editar"
+        {authorsList.length > 0 || loading ? (
+          <List
+            sx={{
+              width: "100%",
+              height: "100%",
+              maxWidth: 500,
+              maxHeight: 750,
+              bgcolor: "background.paper",
+              overflowY: "scroll",
+            }}
+          >
+            {!loading
+              ? authorsList.map((author) => (
+                  <ListItem
+                    key={author.uuid}
+                    disableGutters
+                    secondaryAction={
+                      <>
+                        <IconButton
+                          onClick={() => handleOpenEditAuthorModal(author)}
+                          aria-label="editar"
+                        >
+                          <Edit />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => handleOpenDeleteAuthorModal(author)}
+                          aria-label="apagar"
+                        >
+                          <Delete />
+                        </IconButton>
+                      </>
+                    }
                   >
-                    <Edit />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => handleOpenDeleteAuthorModal(author)}
-                    aria-label="apagar"
+                    <ListItemText primary={author.author} />
+                  </ListItem>
+                ))
+              : [...Array(15)].map((el, idx) => (
+                  <ListItem
+                    key={idx}
+                    disableGutters
+                    secondaryAction={
+                      <>
+                        <IconButton disabled>
+                          <Edit />
+                        </IconButton>
+                        <IconButton disabled>
+                          <Delete />
+                        </IconButton>
+                      </>
+                    }
                   >
-                    <Delete />
-                  </IconButton>
-                </>
-              }
-            >
-              <ListItemText primary={author.author} />
-            </ListItem>
-          )) : [...Array(15)].map((el, idx) => (
-            <ListItem
-              key={idx}
-              disableGutters
-              secondaryAction={
-                <>
-                  <IconButton disabled>
-                    <Edit />
-                  </IconButton>
-                  <IconButton disabled>
-                    <Delete />
-                  </IconButton>
-                </>
-              }
-            >
-              <ListItemText primary={<Skeleton width={'90%'}/>} />
-            </ListItem>
-          ))}
-        </List>
+                    <ListItemText primary={<Skeleton width={"90%"} />} />
+                  </ListItem>
+                ))}
+          </List>
+        ) : (
+          <EmptyState />
+        )}
       </Box>
       <Modal
         open={openDeleteAuthorModal}

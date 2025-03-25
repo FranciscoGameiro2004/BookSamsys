@@ -30,7 +30,6 @@ import {
   FormControlLabel,
   Checkbox,
   Fab,
-  Zoom
 } from "@mui/material";
 import { Author } from "../types/authors";
 
@@ -443,7 +442,7 @@ function Dashboard() {
                 required
               >
                 <MenuItem value="">Nenhum</MenuItem>
-                {authorsList.map((author, idx) => (
+                {authorsList.map((author) => (
                   <MenuItem key={author.uuid} value={`${author.uuid}`}>
                     {author.author}
                   </MenuItem>
