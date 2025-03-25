@@ -231,7 +231,7 @@ function Dashboard() {
     setPriceRange([0,1000])
     setMinRating(1)
     setOnlyAvailable(false
-      
+
     )
   }
 
@@ -251,7 +251,7 @@ function Dashboard() {
     setOpenDeleteBookModal(true);
   };
 
-  const handleCloseAddBookModal = () => setOpenAddEditBookModal(false);
+  const handleCloseAddEditBookModal = () => setOpenAddEditBookModal(false);
 
   const handleCloseDeleteBookModal = () => setOpenDeleteBookModal(false);
 
@@ -415,7 +415,7 @@ function Dashboard() {
         onClickEditBook={handleOpenEditBookModal}
         onClickDeleteBook={handleOpenDeleteBookModal}
       />
-      <Modal open={openAddEditBookModal} onClose={handleCloseAddBookModal}>
+      <Modal open={openAddEditBookModal} onClose={handleCloseAddEditBookModal}>
         <Box
           sx={{
             position: "absolute",
@@ -516,14 +516,14 @@ function Dashboard() {
               control={<Checkbox checked={newEditBookAvailable} onChange={handleNewEditBookAvailableChange} />}
               label="Livro em stock?"
             />
-            <div>
+            <Box sx={{display: 'flex', justifyContent:'space-around', m:3}}>
               <Button variant="contained" type="submit">
                 {addEditModalAction === "add"
                   ? "Adicionar"
                   : "Aplicar Alterações"}
               </Button>
-              <Button variant="outlined">Cancelar</Button>
-            </div>
+              <Button variant="outlined" onClick={handleCloseAddEditBookModal}>Cancelar</Button>
+            </Box>
           </form>
         </Box>
       </Modal>
@@ -549,12 +549,12 @@ function Dashboard() {
             {delBookInfo?.author}?
           </Typography>
           <form action="#" onSubmit={handleDeleteBookSubmit}>
-            <div>
+            <Box sx={{display: 'flex', justifyContent:'space-around', m:3}}>
               <Button variant="contained" type="submit">
                 Apagar
               </Button>
-              <Button variant="outlined">Cancelar</Button>
-            </div>
+              <Button variant="outlined" onClick={handleCloseDeleteBookModal}>Cancelar</Button>
+            </Box>
           </form>
         </Box>
       </Modal>

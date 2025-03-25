@@ -332,12 +332,12 @@ export default function AuthorsPage() {
             Pretende realmente apagar o autor {selectedAuthor?.author}?
           </Typography>
           <form action="#" onSubmit={handleDeleteAuthorSubmit}>
-            <div>
+            <Box sx={{display: 'flex', justifyContent:'space-around', m:3}}>
               <Button variant="contained" type="submit">
                 Apagar
               </Button>
-              <Button variant="outlined">Cancelar</Button>
-            </div>
+              <Button variant="outlined" onClick={handleCloseDeleteAuthorModal}>Cancelar</Button>
+            </Box>
           </form>
         </Box>
       </Modal>
@@ -369,14 +369,14 @@ export default function AuthorsPage() {
             onChange={handleAddEditAuthorNameEdit}
           />
           <form action="#" onSubmit={handleAddEditAuthorSubmit}>
-            <div>
+            <Box sx={{display: 'flex', justifyContent:'space-around', m:3}}>
               <Button variant="contained" type="submit">
                 {addEditModalAction === "add"
                   ? "Adicionar"
                   : "Confirmar Alterações"}
               </Button>
-              <Button variant="outlined">Cancelar</Button>
-            </div>
+              <Button variant="outlined" onClick={handleCloseAddEditAuthorModal}>Cancelar</Button>
+            </Box>
           </form>
         </Box>
       </Modal>
