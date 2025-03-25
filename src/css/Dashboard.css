@@ -1,0 +1,11 @@
+.dashboardContainer {
+    position: relative;
+}
+
+.addBtnContainer {
+    position: fixed;
+    z-index: 1;
+    display: flex;
+    align-items: end;
+    justify-content: end
+}

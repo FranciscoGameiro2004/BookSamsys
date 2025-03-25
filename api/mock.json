@@ -38,12 +38,131 @@
       "responseMode": null,
       "streamingMode": null,
       "streamingInterval": 0
+    },
+    {
+      "uuid": "3d807192-8db3-47bf-8a89-838344a9e766",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "login",
+      "responses": [
+        {
+          "uuid": "510186b7-2c8a-4ee5-8cf3-47efe4d76e07",
+          "body": "{{setGlobalVar 'jwtToken' \"{{faker 'internet.jwt'}}\" }}\n\n{\n  \"message\": \"Login Successful\",\n  \"token\": \"{{faker 'internet.jwt'}}\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "username",
+              "value": "admin",
+              "invert": false,
+              "operator": "equals"
+            },
+            {
+              "target": "body",
+              "modifier": "password",
+              "value": "Password1!",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "21079cd6-9d54-45fb-bf71-615d6ba64de1",
+          "body": "{{setGlobalVar 'jwtToken' \"\" }}\n\n{\n  \"message\": \"Login Uncucessful. Check your credentials.\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "username",
+              "value": "admin",
+              "invert": true,
+              "operator": "equals"
+            },
+            {
+              "target": "body",
+              "modifier": "password",
+              "value": "Password1!",
+              "invert": true,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "19e5153b-85bf-4f52-b363-c39044f18ca4",
+      "type": "crud",
+      "documentation": "",
+      "method": "",
+      "endpoint": "authors",
+      "responses": [
+        {
+          "uuid": "20e35172-efa9-4dbd-9f28-eeb5ed7c2b6c",
+          "body": "{}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "DATABUCKET",
+          "filePath": "",
+          "databucketID": "xjmu",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "uuid",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "rootChildren": [
     {
       "type": "route",
       "uuid": "e3f0285b-67d6-4a67-b498-e1c96569e085"
+    },
+    {
+      "type": "route",
+      "uuid": "19e5153b-85bf-4f52-b363-c39044f18ca4"
+    },
+    {
+      "type": "route",
+      "uuid": "3d807192-8db3-47bf-8a89-838344a9e766"
     }
   ],
   "proxyMode": false,
@@ -95,7 +214,14 @@
       "id": "p58m",
       "name": "Books",
       "documentation": "",
-      "value": "[\r\n  {{#repeat 100}}\r\n    {\r\n      \"uuid\": \"{{faker 'string.uuid' }}\",\r\n      \"isbn\": \"{{faker 'commerce.isbn' }}\",\r\n      \"title\": \"{{faker 'book.title'}}\",\r\n      \"author\": \"{{faker 'book.author'}}\",\r\n      \"publisher\": \"{{faker 'book.publisher'}}\",\r\n      \"genre\": \"{{faker 'book.genre'}}\",\r\n      \"price\": {{faker 'commerce.price'}},\r\n      \"rating\": {{faker 'number.int' min=1 max=5}},\r\n      \"available\": {{faker 'datatype.boolean'}}\r\n    }\r\n  {{/repeat}}\r\n]"
+      "value": "[\r\n  {{#repeat 100}}\r\n    {\r\n      \"uuid\": \"{{faker 'string.uuid' }}\",\r\n      \"isbn\": \"{{faker 'commerce.isbn' }}\",\r\n      \"title\": \"{{faker 'book.title'}}\",\r\n      \"author\": \"{{faker 'book.author'}}\",\r\n      \"authorId\": \"{{oneOf (array '44c4c86e-74ff-46aa-99f2-6cb95bff5f10' '594ba652-9532-4252-b74c-56ec2f4df39d' '82890cb6-e5cd-414f-bd49-e369f57d8840' 'a62d8279-e11b-41d6-b515-4c2bf4a61ec0' '1990d897-d98b-4c6c-9445-641c1d6c0ae8' '88e52da2-739b-4ffd-8555-6250dc0dfab3' 'e82c381a-73d8-454c-94cd-05f99f933b40' 'c9e69c05-5651-48ec-b4d5-655760ab8d8d' 'f48d8375-fa8f-4cdb-aa5d-c15134c256d3' 'c8587285-983e-4d47-884b-34ca9c2b75a6' 'e0a6ab7d-83e0-4e88-beee-c79775dc96d7' '7045e391-2b75-426d-8d04-62d48a83cf87' '1675f5cc-7f50-46cd-b83b-419c72b1a0d3' '31324236-c8ff-45d0-9a80-adcd62c10323' '63d3ddfd-f6d1-4de4-b3a7-26b743acc980' '0ea88f30-35fd-4398-8c45-785e7a2ec43d' '016af0bb-4ac7-4b19-8a69-f10dc974c939' '95235e9e-46e6-416c-a955-a948b08c05b9' '16da8ae7-9a37-4fb0-b14b-6eff5ba965a7' 'ca21db1e-22e4-41d3-8714-0373ee802a8e' 'aa6b0710-d6cf-4762-98e2-e8e1b444567d' '7879a916-909e-4c33-8eac-4b52adf2f744' '07e4187a-0ac5-4c4d-b2cc-fffcbfa9639f' '4a21ecfd-e7e1-4959-b2fa-593dd0d44144' 'dbd0d268-c577-4dee-b910-0c2888d4e7da' 'dba53516-c4f9-48c5-873b-434f101709bc' '80ac3cfa-1a24-4e68-ae83-f2706330eb50' '438bd10d-4ae2-4b8e-b26a-4d53c262cee3' '4549bb28-2d22-417f-ac6f-6d476ff21af6' '77843e02-57c2-407c-be26-bd85d807bf53' '87b0d25e-5884-4872-8ceb-2a3cccbc7b85' '41fa6b59-225b-410e-93cc-82eb1d044efe' '11e9c629-50eb-4bc3-85e1-820ef8eda534' 'd9ed56f6-343c-4a9f-bf1a-addcf28ad9f5' 'e8b5f648-9d52-4bec-a3d7-fff3a75c41d0' '94ddcd10-10d4-4eac-a71b-3943d77f3c50' '44a688d5-beb5-4ab3-8b2a-02978ff88824' '297b7ea7-918a-4c65-8cb8-b824df86b55d' '1a9ece30-da8d-4014-b430-95cab89570d2' '23d1a585-5246-451e-9e2d-19c24d8386c7' 'b244e6b2-4c7f-44f2-bbd9-26cbc7bcc35c' '96d18b43-2799-46b9-a017-e09d7edf6cd5' 'f6d3f918-2156-46fb-8fe3-84272041a0a0' '72c13635-a938-47b4-be74-c2a41d703ebf' '75e51d15-2e81-45b8-be56-a522b4e15a9a' 'dde951ba-2d74-4523-9293-fa281f196364' '983c75f6-eb39-4d9c-b3a3-21be36f68d14' 'daa7fac2-c750-400b-a998-d35ef62c9c24' '340f459c-15ad-4f7e-88c0-460bbb900964' '8b6b7da4-1653-41ec-b554-2b750b73b802' 'b36f959c-a41e-462b-ad1d-556be25deeb6' 'cc71910b-fd93-45aa-9750-c58f49a4d67b')}}\",\r\n      \"publisher\": \"{{faker 'book.publisher'}}\",\r\n      \"genre\": \"{{faker 'book.genre'}}\",\r\n      \"price\": {{faker 'commerce.price'  min=10 max=50}},\r\n      \"rating\": {{faker 'number.int' min=1 max=5}},\r\n      \"available\": {{faker 'datatype.boolean'}}\r\n    }\r\n  {{/repeat}}\r\n]"
+    },
+    {
+      "uuid": "197180f7-b655-4028-bfc8-2f4e9c147d21",
+      "id": "xjmu",
+      "name": "Authors",
+      "documentation": "",
+      "value": "[\r\n    {\"uuid\": \"44c4c86e-74ff-46aa-99f2-6cb95bff5f10\", \"author\": \"Mark Twain\"},\r\n    {\"uuid\": \"594ba652-9532-4252-b74c-56ec2f4df39d\", \"author\": \"George Orwell\"},\r\n    {\"uuid\": \"82890cb6-e5cd-414f-bd49-e369f57d8840\", \"author\": \"Harper Lee\"},\r\n    {\"uuid\": \"a62d8279-e11b-41d6-b515-4c2bf4a61ec0\", \"author\": \"Leo Tolstoy\"},\r\n    {\"uuid\": \"1990d897-d98b-4c6c-9445-641c1d6c0ae8\", \"author\": \"Ernest Hemingway\"},\r\n    {\"uuid\": \"88e52da2-739b-4ffd-8555-6250dc0dfab3\", \"author\": \"J.K. Rowling\"},\r\n    {\"uuid\": \"e82c381a-73d8-454c-94cd-05f99f933b40\", \"author\": \"Leo Tolstoy\"},\r\n    {\"uuid\": \"c9e69c05-5651-48ec-b4d5-655760ab8d8d\", \"author\": \"Leo Tolstoy\"},\r\n    {\"uuid\": \"f48d8375-fa8f-4cdb-aa5d-c15134c256d3\", \"author\": \"J.K. Rowling\"},\r\n    {\"uuid\": \"c8587285-983e-4d47-884b-34ca9c2b75a6\", \"author\": \"J.K. Rowling\"},\r\n    {\"uuid\": \"e0a6ab7d-83e0-4e88-beee-c79775dc96d7\", \"author\": \"Mark Twain\"},\r\n    {\"uuid\": \"7045e391-2b75-426d-8d04-62d48a83cf87\", \"author\": \"Charles Dickens\"},\r\n    {\"uuid\": \"1675f5cc-7f50-46cd-b83b-419c72b1a0d3\", \"author\": \"Leo Tolstoy\"},\r\n    {\"uuid\": \"31324236-c8ff-45d0-9a80-adcd62c10323\", \"author\": \"F. Scott Fitzgerald\"},\r\n    {\"uuid\": \"63d3ddfd-f6d1-4de4-b3a7-26b743acc980\", \"author\": \"Agatha Christie\"},\r\n    {\"uuid\": \"0ea88f30-35fd-4398-8c45-785e7a2ec43d\", \"author\": \"Leo Tolstoy\"},\r\n    {\"uuid\": \"016af0bb-4ac7-4b19-8a69-f10dc974c939\", \"author\": \"Ernest Hemingway\"},\r\n    {\"uuid\": \"95235e9e-46e6-416c-a955-a948b08c05b9\", \"author\": \"George Orwell\"},\r\n    {\"uuid\": \"16da8ae7-9a37-4fb0-b14b-6eff5ba965a7\", \"author\": \"J.K. Rowling\"},\r\n    {\"uuid\": \"ca21db1e-22e4-41d3-8714-0373ee802a8e\", \"author\": \"Charles Dickens\"},\r\n    {\"uuid\": \"aa6b0710-d6cf-4762-98e2-e8e1b444567d\", \"author\": \"Mark Twain\"},\r\n    {\"uuid\": \"7879a916-909e-4c33-8eac-4b52adf2f744\", \"author\": \"F. Scott Fitzgerald\"},\r\n    {\"uuid\": \"07e4187a-0ac5-4c4d-b2cc-fffcbfa9639f\", \"author\": \"Leo Tolstoy\"},\r\n    {\"uuid\": \"4a21ecfd-e7e1-4959-b2fa-593dd0d44144\", \"author\": \"Jane Austen\"},\r\n    {\"uuid\": \"dbd0d268-c577-4dee-b910-0c2888d4e7da\", \"author\": \"George Orwell\"},\r\n    {\"uuid\": \"dba53516-c4f9-48c5-873b-434f101709bc\", \"author\": \"J.K. Rowling\"},\r\n    {\"uuid\": \"80ac3cfa-1a24-4e68-ae83-f2706330eb50\", \"author\": \"Charles Dickens\"},\r\n    {\"uuid\": \"438bd10d-4ae2-4b8e-b26a-4d53c262cee3\", \"author\": \"Leo Tolstoy\"},\r\n    {\"uuid\": \"4549bb28-2d22-417f-ac6f-6d476ff21af6\", \"author\": \"Mark Twain\"},\r\n    {\"uuid\": \"77843e02-57c2-407c-be26-bd85d807bf53\", \"author\": \"Mark Twain\"},\r\n    {\"uuid\": \"87b0d25e-5884-4872-8ceb-2a3cccbc7b85\", \"author\": \"J.K. Rowling\"},\r\n    {\"uuid\": \"41fa6b59-225b-410e-93cc-82eb1d044efe\", \"author\": \"Jane Austen\"},\r\n    {\"uuid\": \"11e9c629-50eb-4bc3-85e1-820ef8eda534\", \"author\": \"Charles Dickens\"},\r\n    {\"uuid\": \"d9ed56f6-343c-4a9f-bf1a-addcf28ad9f5\", \"author\": \"Mark Twain\"},\r\n    {\"uuid\": \"e8b5f648-9d52-4bec-a3d7-fff3a75c41d0\", \"author\": \"Harper Lee\"},\r\n    {\"uuid\": \"94ddcd10-10d4-4eac-a71b-3943d77f3c50\", \"author\": \"Harper Lee\"},\r\n    {\"uuid\": \"44a688d5-beb5-4ab3-8b2a-02978ff88824\", \"author\": \"George Orwell\"},\r\n    {\"uuid\": \"297b7ea7-918a-4c65-8cb8-b824df86b55d\", \"author\": \"J.K. Rowling\"},\r\n    {\"uuid\": \"1a9ece30-da8d-4014-b430-95cab89570d2\", \"author\": \"Agatha Christie\"},\r\n    {\"uuid\": \"23d1a585-5246-451e-9e2d-19c24d8386c7\", \"author\": \"Harper Lee\"},\r\n    {\"uuid\": \"b244e6b2-4c7f-44f2-bbd9-26cbc7bcc35c\", \"author\": \"J.K. Rowling\"},\r\n    {\"uuid\": \"96d18b43-2799-46b9-a017-e09d7edf6cd5\", \"author\": \"Mark Twain\"},\r\n    {\"uuid\": \"f6d3f918-2156-46fb-8fe3-84272041a0a0\", \"author\": \"Harper Lee\"},\r\n    {\"uuid\": \"72c13635-a938-47b4-be74-c2a41d703ebf\", \"author\": \"George Orwell\"},\r\n    {\"uuid\": \"75e51d15-2e81-45b8-be56-a522b4e15a9a\", \"author\": \"Leo Tolstoy\"},\r\n    {\"uuid\": \"dde951ba-2d74-4523-9293-fa281f196364\", \"author\": \"J.K. Rowling\"},\r\n    {\"uuid\": \"983c75f6-eb39-4d9c-b3a3-21be36f68d14\", \"author\": \"J.K. Rowling\"},\r\n    {\"uuid\": \"daa7fac2-c750-400b-a998-d35ef62c9c24\", \"author\": \"Ernest Hemingway\"},\r\n    {\"uuid\": \"340f459c-15ad-4f7e-88c0-460bbb900964\", \"author\": \"Charles Dickens\"},\r\n    {\"uuid\": \"8b6b7da4-1653-41ec-b554-2b750b73b802\", \"author\": \"J.K. Rowling\"},\r\n    {\"uuid\": \"b36f959c-a41e-462b-ad1d-556be25deeb6\", \"author\": \"F. Scott Fitzgerald\"},\r\n    {\"uuid\": \"cc71910b-fd93-45aa-9750-c58f49a4d67b\", \"author\": \"J.K. Rowling\"}\r\n]"
     }
   ],
   "callbacks": []
