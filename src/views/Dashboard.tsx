@@ -516,7 +516,8 @@ function Dashboard() {
               control={<Checkbox checked={newEditBookAvailable} onChange={handleNewEditBookAvailableChange} />}
               label="Livro em stock?"
             />
-            <Box sx={{display: 'flex', justifyContent:'space-around', m:3}}>
+            <Box sx={{display: 'flex', justifyContent:'space-around', m:3}}
+            >
               <Button variant="contained" type="submit">
                 {addEditModalAction === "add"
                   ? "Adicionar"

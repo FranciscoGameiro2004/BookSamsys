@@ -16,14 +16,16 @@ import {
   Slider,
   Typography,
   Rating,
+  Drawer,
 } from "@mui/material";
-import { Search, RestartAlt } from "@mui/icons-material";
+import { Search, RestartAlt, Tune } from "@mui/icons-material";
 
 import {
   ChangeEventHandler,
   FormEventHandler,
   SyntheticEvent,
   ChangeEvent,
+  useState,
 } from "react";
 import { type SelectChangeEvent } from "@mui/material";
 
@@ -46,7 +48,7 @@ interface BookSearchProps {
   onPriceRangeChange: (e: Event, newValue: number | number[]) => void;
   onMinRatingChange: (e: SyntheticEvent, newValue: number | null) => void;
   onOnlyAvailableChange: ChangeEventHandler<HTMLInputElement>;
-  onResetFilterClick: () => void
+  onResetFilterClick: () => void;
 }
 
 export default function BookSearch({
@@ -68,6 +70,17 @@ export default function BookSearch({
   onOnlyAvailableChange,
   onResetFilterClick,
 }: BookSearchProps) {
+
+  const [openFilters, setOpenFilters] = useState((false))
+
+  const handleOpenFiltersClick = () => {
+    setOpenFilters(true)
+  }
+
+  const handleCloseFiltersClick = () => {
+    setOpenFilters(false)
+  }
+
   return (
     <div>
       <form action="#" onSubmit={onFormSubmit}>
@@ -80,8 +93,12 @@ export default function BookSearch({
               onChange={onSearchChange}
               sx={{ width: 470, mr: 1 }}
             />
-            <Button type="submit" variant="contained" sx={{height: 53, ml: 1}}>
-              <Search/>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{ height: 53, ml: 1 }}
+            >
+              <Search />
             </Button>
           </div>
           <div className="orderContainer">
@@ -117,9 +134,15 @@ export default function BookSearch({
                 />
               </RadioGroup>
             </FormControl>
+            <Button onClick={handleOpenFiltersClick}>
+            <Tune />
+            </Button>
           </div>
         </div>
-        <div className="filtersContainer">
+        
+        <Drawer open={openFilters} onClose={handleCloseFiltersClick}>
+          <Box sx={{ maxWidth: 350 }}>
+          <div className="filtersContainer">
           <FormControl sx={{ m: 1, minWidth: 100 }}>
             <InputLabel id="genreLabel">Gênero</InputLabel>
             <Select
@@ -132,7 +155,9 @@ export default function BookSearch({
             >
               <MenuItem value="">Todos</MenuItem>
               {genreList.map((genre, idx) => (
-                <MenuItem key={idx} value={`&genre_eq=${genre}`}>{genre}</MenuItem>
+                <MenuItem key={idx} value={`&genre_eq=${genre}`}>
+                  {genre}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -153,7 +178,8 @@ export default function BookSearch({
             <Rating value={minRating} onChange={onMinRatingChange} />
           </Box>
 
-          <FormControlLabel value={onlyAvailable}
+          <FormControlLabel
+            value={onlyAvailable}
             control={
               <Checkbox
                 checked={onlyAvailable}
@@ -163,10 +189,12 @@ export default function BookSearch({
             label="Mostrar somente livros disponíveis?"
           />
           <Button onClick={onResetFilterClick}>
-              <RestartAlt />
-            </Button>
+            <RestartAlt />
+          </Button>
           <br />
         </div>
+          </Box>
+        </Drawer>
       </form>
     </div>
   );
