@@ -17,8 +17,16 @@ import {
   Typography,
   Rating,
   Drawer,
+  Chip,
 } from "@mui/material";
-import { Search, RestartAlt, Tune } from "@mui/icons-material";
+import {
+  Search,
+  RestartAlt,
+  Tune,
+  Category,
+  EuroSymbol,
+  Star,
+} from "@mui/icons-material";
 
 import {
   ChangeEventHandler,
@@ -48,7 +56,11 @@ interface BookSearchProps {
   onPriceRangeChange: (e: Event, newValue: number | number[]) => void;
   onMinRatingChange: (e: SyntheticEvent, newValue: number | null) => void;
   onOnlyAvailableChange: ChangeEventHandler<HTMLInputElement>;
-  onResetFilterClick: () => void;
+  onResetFiltersClick: () => void;
+  onRemoveGenreFilterClick: () => void;
+  onRemoveOnlyAvailableFilterClick: () => void;
+  onResetPriceRangeFilterClick: () => void;
+  onResetMinRatingFilterClick: () => void;
 }
 
 export default function BookSearch({
@@ -68,7 +80,11 @@ export default function BookSearch({
   onPriceRangeChange,
   onMinRatingChange,
   onOnlyAvailableChange,
-  onResetFilterClick,
+  onResetFiltersClick,
+  onRemoveGenreFilterClick,
+  onRemoveOnlyAvailableFilterClick,
+  onResetPriceRangeFilterClick,
+  onResetMinRatingFilterClick,
 }: BookSearchProps) {
   const [openFilters, setOpenFilters] = useState(false);
 
@@ -137,6 +153,37 @@ export default function BookSearch({
               <Tune />
             </Button>
           </div>
+          <Box sx={{ display: "flex", flexDirection: "row" }}>
+            {genreFilter !== "" && (
+              <Chip
+                icon={<Category />}
+                sx={{ m: 1 }}
+                label={genreFilter.replace("&genre_eq=", "")}
+                onDelete={onRemoveGenreFilterClick}
+              />
+            )}
+            <Chip
+              icon={<EuroSymbol />}
+              sx={{ m: 1 }}
+              label={`${priceRange[0]}€ - ${priceRange[1]}€`}
+              onDelete={onResetPriceRangeFilterClick}
+              deleteIcon={<RestartAlt />}
+            />
+            <Chip
+              icon={<Star />}
+              sx={{ m: 1 }}
+              label={`${minRating} ou mais`}
+              onDelete={onResetMinRatingFilterClick}
+              deleteIcon={<RestartAlt />}
+            />
+            {onlyAvailable && (
+              <Chip
+                sx={{ m: 1 }}
+                label="Disponível"
+                onDelete={onRemoveOnlyAvailableFilterClick}
+              />
+            )}
+          </Box>
         </div>
 
         <Drawer open={openFilters} onClose={handleCloseFiltersClick}>
@@ -201,7 +248,7 @@ export default function BookSearch({
               label="Mostrar somente livros disponíveis?"
             />
             <Button
-              onClick={onResetFilterClick}
+              onClick={onResetFiltersClick}
               sx={{ minWidth: 300, m: 3 }}
               variant="contained"
             >

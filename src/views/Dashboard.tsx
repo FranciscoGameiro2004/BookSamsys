@@ -223,17 +223,32 @@ function Dashboard() {
     setOnlyAvailable((previousValue) => !previousValue);
   };
 
-  const handleResetFilterClick = () => {
-    setSearch("")
-    setOrderBy("")
-    setSortBy("")
-    setGenreFilter("")
-    setPriceRange([0,1000])
-    setMinRating(1)
-    setOnlyAvailable(false
+  const handleResetFiltersClick = () => {
+    setSearch("");
+    setOrderBy("");
+    setSortBy("");
+    setGenreFilter("");
+    setPriceRange([0, 1000]);
+    setMinRating(1);
+    setOnlyAvailable(false);
+  };
 
-    )
-  }
+  
+  const handleRemoveGenreFilterClick = () => {
+    setGenreFilter("");
+  };
+
+const handleRemoveOnlyAvailableFilterClick = () => {
+    setOnlyAvailable(false);
+  };
+  const handleResetMinRatingFilterClick = () => {
+    setMinRating(1);
+  };
+
+  const handleResetPriceRangeFilterClick = () => {
+    setPriceRange([0, 1000]);
+  };
+
 
   const handleOpenAddBookModal = () => {
     setAddEditModalAction("add");
@@ -373,11 +388,11 @@ function Dashboard() {
       <Box>
         <Fab
           sx={{
-            position: 'fixed',
+            position: "fixed",
             bottom: 40,
             right: 40,
             color: "white",
-            backgroundColor: 'blueviolet',
+            backgroundColor: "blueviolet",
           }}
           onClick={handleOpenAddBookModal}
         >
@@ -402,7 +417,11 @@ function Dashboard() {
         onPriceRangeChange={handlePriceRangeChange}
         onMinRatingChange={handleMinRatingChange}
         onOnlyAvailableChange={handleOnlyAvailableChange}
-        onResetFilterClick={handleResetFilterClick}
+        onResetFiltersClick={handleResetFiltersClick}
+        onRemoveGenreFilterClick={handleRemoveGenreFilterClick}
+        onRemoveOnlyAvailableFilterClick={handleRemoveOnlyAvailableFilterClick}
+        onResetMinRatingFilterClick={handleResetMinRatingFilterClick}
+        onResetPriceRangeFilterClick={handleResetPriceRangeFilterClick}
       />
       <hr />
       <BookResults
@@ -513,17 +532,23 @@ function Dashboard() {
             <FormControlLabel
               sx={{ width: "100%", m: 1 }}
               value={newEditBookAvailable}
-              control={<Checkbox checked={newEditBookAvailable} onChange={handleNewEditBookAvailableChange} />}
+              control={
+                <Checkbox
+                  checked={newEditBookAvailable}
+                  onChange={handleNewEditBookAvailableChange}
+                />
+              }
               label="Livro em stock?"
             />
-            <Box sx={{display: 'flex', justifyContent:'space-around', m:3}}
-            >
+            <Box sx={{ display: "flex", justifyContent: "space-around", m: 3 }}>
               <Button variant="contained" type="submit">
                 {addEditModalAction === "add"
                   ? "Adicionar"
                   : "Aplicar Alterações"}
               </Button>
-              <Button variant="outlined" onClick={handleCloseAddEditBookModal}>Cancelar</Button>
+              <Button variant="outlined" onClick={handleCloseAddEditBookModal}>
+                Cancelar
+              </Button>
             </Box>
           </form>
         </Box>
@@ -550,11 +575,13 @@ function Dashboard() {
             {delBookInfo?.author}?
           </Typography>
           <form action="#" onSubmit={handleDeleteBookSubmit}>
-            <Box sx={{display: 'flex', justifyContent:'space-around', m:3}}>
+            <Box sx={{ display: "flex", justifyContent: "space-around", m: 3 }}>
               <Button variant="contained" type="submit">
                 Apagar
               </Button>
-              <Button variant="outlined" onClick={handleCloseDeleteBookModal}>Cancelar</Button>
+              <Button variant="outlined" onClick={handleCloseDeleteBookModal}>
+                Cancelar
+              </Button>
             </Box>
           </form>
         </Box>
