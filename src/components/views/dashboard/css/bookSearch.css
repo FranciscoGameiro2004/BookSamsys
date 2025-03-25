@@ -1,0 +1,26 @@
+.searchContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.searchBar {
+    display: flex;
+}
+
+.orderContainer {
+    display: flex;
+    justify-content:center;
+    align-items: center;
+}
+.orderContainer > .orderItem {
+    margin: 20px;
+}
+
+.filtersContainer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+}
